@@ -8,7 +8,18 @@
 * {
   box-sizing: border-box;
 }
-
+/* Scroll smoothly when clicking navigation links */
+html {
+  scroll-behavior: smooth;
+}
+/**************************************************/
 body {
   margin: 0;
 }
+/* Jump directly to the section without a scrolling animation */
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}
+/**************************************************/
