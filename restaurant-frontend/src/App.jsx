@@ -1,4 +1,5 @@
 import './App.css'
+import Menu from './components/Menu'
 
 function App() {
   return (
@@ -24,7 +25,7 @@ function App() {
         </section>
         <section id="menu" aria-labelledby="menu-heading">
           <h2 id="menu-heading">Our Menu</h2>
-          <p>Our menu is coming soon.</p>
+          <Menu />
         </section>
         <section id="booking" aria-labelledby="booking-heading">
           <h2 id="booking-heading">Make a Booking</h2>
