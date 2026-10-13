@@ -1,5 +1,6 @@
 import './App.css'
 import Menu from './components/Menu'
+import PromoCarousel from './components/PromoCarousel'
 
 function App() {
   return (
@@ -18,11 +19,9 @@ function App() {
           </div>
         </nav>
       </header>
-      <main className="page-content">
-        <section id="home" aria-labelledby="home-heading">
-          <h1 id="home-heading">Welcome to Rayen Restaurant</h1>
-          <p>We’re happy to have you here. Make yourself at home.</p>
-        </section>
+      <main>
+        <PromoCarousel />
+        <div className="page-content">
         <section id="menu" aria-labelledby="menu-heading">
           <h2 id="menu-heading">Our Menu</h2>
           <Menu />
@@ -37,7 +36,7 @@ function App() {
           <h2 id="about-heading">About Us</h2>
           <p>Welcome to Rayen Restaurant, a place to enjoy good food and great company.</p>
         </section>
-        {/* **********************************************************+ */}
+        </div>
       </main>
     </>
   )
