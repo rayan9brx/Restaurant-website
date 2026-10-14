@@ -1,0 +1,31 @@
+.auth-controls { display: flex; align-items: center; flex-wrap: wrap; gap: 12px; }
+.auth-user { overflow-wrap: anywhere; }
+.auth-nav-feedback { font-size: .875rem; max-width: 260px; }
+.auth-nav-feedback button { background: transparent; color: inherit; border: 0; text-decoration: underline; cursor: pointer; font: inherit; }
+.auth-dialog {
+  width: min(460px, calc(100vw - 32px));
+  max-height: calc(100svh - 32px);
+  padding: 32px;
+  border: 1px solid #deddd1;
+  border-radius: 14px;
+  background: #f8f5ec;
+  color: #183c30;
+  overflow-y: auto;
+}
+.auth-dialog::backdrop { background: rgb(10 30 22 / 65%); }
+.auth-dialog h2 { margin: 0 24px 12px 0; }
+.auth-dialog p { line-height: 1.5; }
+.auth-close { position: absolute; top: 12px; right: 12px; background: transparent; border: 0; color: #183c30; font-size: 1.75rem; cursor: pointer; }
+.auth-dialog fieldset { margin: 0; padding: 0; border: 0; min-width: 0; }
+.auth-dialog label { display: grid; gap: 6px; margin-block: 16px; font-weight: 600; }
+.auth-dialog input { width: 100%; padding: 12px; border: 1px solid #809185; border-radius: 6px; background: #fffdf7; color: #183c30; font: inherit; }
+.auth-dialog input[aria-invalid='true'] { border-color: #933c2e; }
+.auth-submit { padding: 12px 20px; border: 1px solid #183c30; border-radius: 6px; background: #183c30; color: #f8f5ec; font: inherit; font-weight: 600; cursor: pointer; }
+.auth-dialog .auth-submit { width: 100%; margin-top: 8px; }
+.auth-switch button { color: #183c30; font: inherit; background: transparent; border: 0; text-decoration: underline; cursor: pointer; }
+.auth-error, .auth-field-error { color: #933c2e; }
+.auth-field-error, .auth-hint { font-size: .875rem; font-weight: 400; }
+.auth-success { padding: 12px; background: #e1e9dc; border-radius: 6px; }
+.auth-dialog :focus-visible, .auth-submit:focus-visible { outline: 3px solid #567b47; outline-offset: 3px; }
+.auth-dialog button:disabled, .auth-controls button:disabled { opacity: .65; cursor: wait; }
+@media (max-width: 480px) { .auth-dialog { padding: 24px; } }
