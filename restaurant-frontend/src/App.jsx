@@ -1,8 +1,19 @@
 import './App.css'
 import Menu from './components/Menu'
 import PromoCarousel from './components/PromoCarousel'
+import { useEffect, useState } from 'react'
+import useAuth from './auth/useAuth'
+import AuthControls from './auth/AuthControls'
+import AdminDashboard from './auth/AdminDashboard'
 
 function App() {
+  const auth = useAuth()
+  const [adminPage, setAdminPage] = useState(() => window.location.hash === '#admin')
+  useEffect(() => {
+    const updatePage = () => setAdminPage(window.location.hash === '#admin')
+    window.addEventListener('hashchange', updatePage)
+    return () => window.removeEventListener('hashchange', updatePage)
+  }, [])
   return (
     <>
       <header className="site-header">
@@ -14,12 +25,13 @@ function App() {
             <a href="#booking">Make a Booking</a>
             {/* Scroll to the About Us section on this page. */}
             <a href="#about">About Us</a>
-            {/* Visual button only; login functionality will be added later. */}
-            <button type="button" className="login-button">Log In</button>
+            <AuthControls auth={auth} />
           </div>
         </nav>
       </header>
       <main>
+        {adminPage && <AdminDashboard user={auth.user} checking={auth.checking} />}
+        <div hidden={adminPage}>
         <PromoCarousel />
         <div className="page-content">
         <section id="menu" aria-labelledby="menu-heading">
@@ -36,6 +48,7 @@ function App() {
           <h2 id="about-heading">About Us</h2>
           <p>Welcome to Rayen Restaurant, a place to enjoy good food and great company.</p>
         </section>
+        </div>
         </div>
       </main>
     </>

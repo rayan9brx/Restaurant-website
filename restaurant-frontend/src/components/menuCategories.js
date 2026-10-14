@@ -1,4 +1,5 @@
 export const categories = [
+  { id: 'all', name: 'All' },
   { id: 'burgers', name: 'Burgers' },
   { id: 'pizza', name: 'Pizza' },
   { id: 'salads', name: 'Salads' },
@@ -16,6 +17,7 @@ const aliases = {
 }
 
 export function normalizeCategory(value) {
+  // Match API categories regardless of capitalization or singular/plural spelling.
   const key = typeof value === 'string' ? value.trim().toLowerCase() : ''
   return Object.hasOwn(aliases, key) ? aliases[key] : key
 }
