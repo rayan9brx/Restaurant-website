@@ -2,6 +2,27 @@ import { useEffect, useRef, useState } from 'react'
 import { api, post } from './api'
 import './Auth.css'
 
+function PasswordField({ name, label, autoComplete, invalid, error }) {
+  const [visible, setVisible] = useState(false)
+
+  return (
+    <div className="auth-password-field">
+      <label htmlFor={`auth-${name}`}>{label}</label>
+      <div className="auth-password-input">
+        <input id={`auth-${name}`} name={name} type={visible ? 'text' : 'password'} autoComplete={autoComplete} required maxLength={72} {...invalid} />
+        <button className="auth-password-toggle" type="button" aria-label={`${visible ? 'Hide' : 'Show'} ${label.toLowerCase()}`} aria-controls={`auth-${name}`} onClick={() => setVisible(!visible)}>
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.7" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <path d="M2 12s3.5-7 10-7 10 7 10 7-3.5 7-10 7S2 12 2 12Z" />
+            <circle cx="12" cy="12" r="3" />
+            {visible && <path d="m3 3 18 18" />}
+          </svg>
+        </button>
+      </div>
+      {error}
+    </div>
+  )
+}
+
 export default function AuthControls({ auth }) {
   const { user, setUser, checking, error: restoreError, restore } = auth
   const [mode, setMode] = useState(null)
@@ -103,10 +124,10 @@ export default function AuthControls({ auth }) {
           <fieldset disabled={busy}>
             {mode === 'signup' && <label>Name<input name="name" autoComplete="name" required maxLength={100} {...invalidProps('name')} />{inputError('name')}</label>}
             <label>Email<input name="email" type="email" autoComplete="email" required maxLength={254} {...invalidProps('email')} />{inputError('email')}</label>
-            <label>Password<input name="password" type="password" autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} required minLength={mode === 'signup' ? 8 : undefined} maxLength={72} {...invalidProps('password')} />{inputError('password')}</label>
+            <PasswordField key={mode || 'closed'} name="password" label="Password" autoComplete={mode === 'signup' ? 'new-password' : 'current-password'} invalid={invalidProps('password')} error={inputError('password')} />
             {mode === 'signup' && <>
-              <p className="auth-hint">Use at least 8 characters (maximum 72 UTF-8 bytes).</p>
-              <label>Confirm password<input name="confirmPassword" type="password" autoComplete="new-password" required minLength={8} maxLength={72} {...invalidProps('confirmPassword')} />{inputError('confirmPassword')}</label>
+              <p className="auth-hint">Maximum 72 UTF-8 bytes.</p>
+              <PasswordField name="confirmPassword" label="Confirm password" autoComplete="new-password" invalid={invalidProps('confirmPassword')} error={inputError('confirmPassword')} />
             </>}
             <button className="auth-submit" type="submit">{busy ? 'Please wait…' : mode === 'signup' ? 'Sign Up' : 'Log In'}</button>
           </fieldset>

@@ -20,6 +20,12 @@
 .auth-dialog label { display: grid; gap: 6px; margin-block: 16px; font-weight: 600; }
 .auth-dialog input { width: 100%; padding: 12px; border: 1px solid #809185; border-radius: 6px; background: #fffdf7; color: #183c30; font: inherit; }
 .auth-dialog input[aria-invalid='true'] { border-color: #933c2e; }
+.auth-password-field { display: grid; gap: 6px; margin-block: 16px; }
+.auth-password-field label { margin: 0; }
+.auth-password-input { position: relative; }
+.auth-password-input input { padding-right: 48px; }
+.auth-password-toggle { position: absolute; top: 0; right: 0; bottom: 0; display: grid; place-items: center; width: 44px; padding: 0; border: 0; border-radius: 6px; background: transparent; color: #183c30; cursor: pointer; }
+.auth-password-toggle:hover { background: rgb(24 60 48 / 8%); }
 .auth-submit { padding: 12px 20px; border: 1px solid #183c30; border-radius: 6px; background: #183c30; color: #f8f5ec; font: inherit; font-weight: 600; cursor: pointer; }
 .auth-dialog .auth-submit { width: 100%; margin-top: 8px; }
 .auth-switch button { color: #183c30; font: inherit; background: transparent; border: 0; text-decoration: underline; cursor: pointer; }
