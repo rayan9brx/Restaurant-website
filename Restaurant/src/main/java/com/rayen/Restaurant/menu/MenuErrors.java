@@ -11,6 +11,10 @@ import java.util.*;
 
 @RestControllerAdvice(assignableTypes=MenuManagementController.class)
 public class MenuErrors {
+    @ExceptionHandler(DishNotFoundException.class)
+    public ResponseEntity<?> missing() {
+        return ResponseEntity.status(404).body(Map.of("message", "This dish no longer exists. Refresh the dish list."));
+    }
     @ExceptionHandler(DishInputException.class)
     public ResponseEntity<?> input(DishInputException error) { return bad(error.errors); }
     @ExceptionHandler(MethodArgumentNotValidException.class)

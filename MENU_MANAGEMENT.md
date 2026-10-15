@@ -1,4 +1,4 @@
-# Adding dishes as the owner
+# Adding and editing dishes as the owner
 
 Run `./start-backend.ps1` from the project root, and `npm run dev` from `restaurant-frontend`. Restart the backend after pulling these changes. Keep PostgreSQL running and use your existing owner login; no credentials were changed.
 
@@ -37,7 +37,7 @@ Backend: from `Restaurant`, use Java 21 and run `.\mvnw.cmd test`. New tests cov
 
 Frontend: from `restaurant-frontend`, run `npm run build` and `npm run lint`.
 
-API: `GET /api/admin/dishes` and `POST /api/admin/dishes` require ADMIN. POST uses multipart parts named `dish` (JSON) and `photo` (file), plus the existing session CSRF header. Public `GET /api/dishes` remains the customer menu source. There is no edit, delete, category-management or separate public upload endpoint.
+API: `GET /api/admin/dishes` and `POST /api/admin/dishes` require ADMIN. POST uses multipart parts named `dish` (JSON) and `photo` (file), plus the existing session CSRF header. Public `GET /api/dishes` remains the customer menu source. PUT `/api/admin/dishes/{id}` updates an existing dish and requires ADMIN plus CSRF. There is no category-management or separate public upload endpoint.
 
 Verified: all 16 backend tests passed, frontend build and lint passed, owner form and photo preview checked in the browser, mobile width checked without horizontal overflow, and a real HTTP upload over 5 MB returned the expected 413 JSON field error. The original three PostgreSQL dishes were retained; no test dishes were added to PostgreSQL.
 
@@ -50,3 +50,28 @@ In Add Dish, enter the regular price. To offer a discount, check **Put this dish
 Check **Show in Bestsellers** to feature the new dish in the customer Bestsellers section, using its uploaded photo. The original two favourites remain in place. New entries come from PostgreSQL and are matched by ID to avoid duplicate cards. These are owner selections, not an automatic ranking by order volume.
 
 `Dish.java` adds nullable `sale_price numeric(10,2)` and `bestseller boolean` columns, so old dishes keep their prices and data. Startup adds these columns with the existing development schema-update setting. The ADMIN-only multipart endpoint validates and saves both fields; session and CSRF rules remain unchanged. `DishPrice.jsx` and `.css` share sale display across customer/admin cards. `Bestsellers.jsx` includes owner-selected dishes. Additional isolated backend tests cover persistence, public API data, defaults and invalid sale prices.
+
+## Browse and edit existing dishes
+
+Open Admin Dashboard → Menu Management. The list starts with **All** categories grouped under their headings. Use **Filter by category** and **Search dishes by name** together to narrow the list. Every card shows its photo (or fallback), name, category, current price and availability.
+
+1. Click a dish's **Edit** button. The shared Add/Edit form opens with all current fields, including sale price and bestseller selection.
+2. Change any values. The current photo is shown separately; choose **Replacement photo (optional)** to preview a new one. Leave it empty to keep the existing photo. Older dishes without a photo can also be edited without adding one.
+3. Click **Save Changes**. The button shows Saving while the request runs. After success, the list updates the existing card in its correct category. Search/category filters reset to All so the saved dish remains visible. The customer menu fetches the latest data after saving and on refresh.
+4. Click **Cancel** to discard the form's changes without saving. Opening Edit again loads the last saved values. **Add Dish** still opens a separate blank form and requires a new photo.
+
+`PUT /api/admin/dishes/{id}` accepts the same validated JSON `dish` part as creation and an optional `photo` part. It preserves the database ID, checks ADMIN and CSRF, and returns a clear 404 for an unknown ID. There are no new configuration settings or schema changes for editing.
+
+Replacement photos are validated and written before the database update. A failed transaction rolls back the record and removes only the newly generated photo. The old image is retained on both failure and success; images may be shared by multiple dishes. Retired photos can therefore accumulate. Any future cleanup must check database references before removing files.
+
+Editing changes `DishCreationService.java`, `MenuManagementController.java`, `MenuErrors.java`, and adds `DishNotFoundException.java`. The frontend reuses `MenuManagement.jsx` and `.css`; `bestsellerSelection.js` and `Bestsellers.jsx` ensure renamed/updated selections and photos appear correctly without stale hardcoded cards. Security, the Dish entity, existing upload storage and customer category filtering are reused.
+
+Verification for editing: all 25 backend tests passed, including field/category updates, preserved IDs, keeping/replacing/shared photos, legacy dishes without photos, clearing optional fields, invalid data/images, missing dishes, anonymous/CLIENT/CSRF rejection, and a flushed update that rolls back after a simulated database failure. These use H2 and temporary image storage. Frontend build and lint passed.
+
+Browser verification also confirmed combined category/name filtering, prefilled values, Cancel restoring the original name/category, and mobile layout without horizontal overflow. A real multipart PUT to a nonexistent ID returned the expected 404; the existing PostgreSQL menu was identical before and after verification.
+
+## Delete a dish
+
+Each admin card now has **Delete** next to **Edit**. Delete opens an inline confirmation naming the dish. **Cancel** leaves it unchanged; **Confirm Delete** permanently removes it from PostgreSQL and refreshes the customer menu. Buttons are disabled during deletion; errors and success messages are displayed. Deleting the currently edited dish closes its form.
+
+`DELETE /api/admin/dishes/{id}` requires ADMIN and the existing session CSRF token. Unknown IDs return 404. Images are retained so other dishes sharing the same file are not broken. No existing restaurant dishes were removed during implementation; deletion tests use isolated H2 records. All 28 backend tests, frontend build and lint passed.
