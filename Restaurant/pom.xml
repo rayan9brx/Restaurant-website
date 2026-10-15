@@ -30,6 +30,11 @@
 		<java.version>21</java.version>
 	</properties>
 	<dependencies>
+		<dependency>
+			<groupId>com.twelvemonkeys.imageio</groupId>
+			<artifactId>imageio-webp</artifactId>
+			<version>3.13.0</version>
+		</dependency>
 		<!-- Spring Boot chooses a compatible Spring Security version. -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

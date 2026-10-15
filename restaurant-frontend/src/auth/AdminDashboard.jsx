@@ -1,7 +1,8 @@
 import { useEffect, useState } from 'react'
 import { api } from './api'
+import MenuManagement from './MenuManagement'
 
-export default function AdminDashboard({ user, checking }) {
+export default function AdminDashboard({ user, checking, onDishCreated }) {
   const [result, setResult] = useState({ message: '', error: '' })
   const [attempt, setAttempt] = useState(0)
 
@@ -29,6 +30,7 @@ export default function AdminDashboard({ user, checking }) {
           setAttempt((current) => current + 1)
         }}>Retry</button>}
         <a href="#home">Back to the restaurant</a>
+        {user?.role === 'ADMIN' && <MenuManagement onCreated={onDishCreated} />}
       </section>
     </div>
   )

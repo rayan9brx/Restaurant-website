@@ -47,7 +47,7 @@ function App() {
         </nav>
       </header>
       <main>
-        {adminPage && <AdminDashboard user={auth.user} checking={auth.checking} />}
+        {adminPage && <AdminDashboard user={auth.user} checking={auth.checking} onDishCreated={retry} />}
         <div hidden={adminPage}>
         <PromoCarousel />
         <div className="page-content">

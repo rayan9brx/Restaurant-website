@@ -1,6 +1,7 @@
 import burger from '../assets/bestsellers/beef-burger.png'
 import pizza from '../assets/bestsellers/margherita-pizza.png'
-import { euroPrice } from './dishDisplay'
+import DishPrice from './DishPrice'
+import DishPhoto from './DishPhoto'
 import './Bestsellers.css'
 
 const featured = [
@@ -10,6 +11,13 @@ const featured = [
 const normalizeName = (name) => typeof name === 'string' ? name.trim().toLowerCase().replace(/\s+/g, ' ') : ''
 
 export default function Bestsellers({ menu, retry, onViewDish }) {
+  // Keep the original favourites and include new dishes selected by the owner.
+  const originalSelections = featured.map((feature) => ({ ...feature,
+    dish: menu.dishes.find((dish) => normalizeName(dish.name) === normalizeName(feature.name)),
+  }))
+  const selections = [...originalSelections, ...menu.dishes.filter((dish) => dish.bestseller === true
+    && !originalSelections.some((feature) => feature.dish?.id === dish.id))
+    .map((dish) => ({ name: dish.name, dish }))]
   return (
     <section id="bestsellers" aria-labelledby="bestsellers-heading">
       <p className="bestsellers-label">CUSTOMER FAVOURITES</p>
@@ -21,19 +29,19 @@ export default function Bestsellers({ menu, retry, onViewDish }) {
         </div>
       ) : (
         <div className="bestsellers-grid">
-          {featured.map((feature) => {
+          {selections.map((feature) => {
             // These are manually selected dishes, not a ranking based on sales.
-            const dish = menu.dishes.find((item) => normalizeName(item.name) === normalizeName(feature.name))
+            const dish = feature.dish || menu.dishes.find((item) => normalizeName(item.name) === normalizeName(feature.name))
             return (
-              <article className="bestseller-card" key={feature.name}>
-                <img src={feature.image} alt={feature.alt} width="1536" height="1024" loading="lazy" />
+              <article className="bestseller-card" key={dish?.id || feature.name}>
+                {feature.image ? <img src={feature.image} alt={feature.alt} width="1536" height="1024" loading="lazy" /> : <DishPhoto dish={dish} />}
                 <div className="bestseller-copy">
                   <h3>{dish?.name || feature.name}</h3>
                   <p className="bestseller-description">{dish ? dish.description || 'No description available.' : 'This favourite is not currently listed on our menu. Please check back soon.'}</p>
                   {dish ? (
                     <>
                       <div className="bestseller-details">
-                        <span className="bestseller-price">{dish.price != null ? euroPrice.format(dish.price) : 'Price unavailable'}</span>
+                        <span className="bestseller-price"><DishPrice dish={dish} /></span>
                         <span className={`menu-availability${dish.available === false ? ' is-sold-out' : ''}`}>
                           {dish.available === false ? 'Sold out' : 'Available'}
                         </span>

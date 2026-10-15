@@ -27,6 +27,33 @@ public class Dish {
 
     private boolean available = true;
 
+    private String photo;
+    @Column(length = 2000)
+    private String ingredients;
+    @Column(length = 1000)
+    private String allergens;
+    private Boolean vegetarian;
+    private Boolean vegan;
+    @Column(precision = 10, scale = 2)
+    private BigDecimal salePrice;
+    private Boolean bestseller;
+
+    public BigDecimal getSalePrice() { return salePrice; }
+    public void setSalePrice(BigDecimal salePrice) { this.salePrice = salePrice; }
+    public Boolean getBestseller() { return bestseller; }
+    public void setBestseller(Boolean bestseller) { this.bestseller = bestseller; }
+
+    public String getPhotoUrl() { return photo == null ? null : "/api/dish-photos/" + photo; }
+    public void setPhoto(String photo) { this.photo = photo; }
+    public String getIngredients() { return ingredients; }
+    public void setIngredients(String ingredients) { this.ingredients = ingredients; }
+    public String getAllergens() { return allergens; }
+    public void setAllergens(String allergens) { this.allergens = allergens; }
+    public Boolean getVegetarian() { return vegetarian; }
+    public void setVegetarian(Boolean vegetarian) { this.vegetarian = vegetarian; }
+    public Boolean getVegan() { return vegan; }
+    public void setVegan(Boolean vegan) { this.vegan = vegan; }
+
     // JPA needs a constructor without arguments.
     public Dish() {
     }

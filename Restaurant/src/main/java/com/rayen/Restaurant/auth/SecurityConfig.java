@@ -30,6 +30,8 @@ public class SecurityConfig {
         // Keep default CSRF protection. React obtains a token before each POST.
         http.authorizeHttpRequests(auth -> auth
                 .requestMatchers("/api/admin/**").hasRole("ADMIN")
+                .requestMatchers(HttpMethod.GET, "/api/dish-photos/*").permitAll()
+                .requestMatchers("/api/dish-photos/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/dishes", "/api/auth/csrf").permitAll()
                 .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
                 .requestMatchers("/api/**").authenticated()
