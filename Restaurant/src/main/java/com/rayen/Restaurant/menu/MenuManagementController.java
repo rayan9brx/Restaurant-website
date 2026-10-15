@@ -23,4 +23,16 @@ public class MenuManagementController {
                        @RequestPart(value="photo", required=false) MultipartFile photo) throws IOException {
         return creation.create(dish, photo);
     }
+
+    @PutMapping(value="/{id}", consumes=MediaType.MULTIPART_FORM_DATA_VALUE)
+    public Dish update(@PathVariable Long id, @Valid @RequestPart("dish") DishRequest dish,
+                       @RequestPart(value="photo", required=false) MultipartFile photo) throws IOException {
+        return creation.update(id, dish, photo);
+    }
+
+    @DeleteMapping("/{id}")
+    public java.util.Map<String, String> delete(@PathVariable Long id) {
+        creation.delete(id);
+        return java.util.Map.of("message", "Dish deleted.");
+    }
 }
