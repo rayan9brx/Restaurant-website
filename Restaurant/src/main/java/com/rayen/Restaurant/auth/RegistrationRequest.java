@@ -8,7 +8,7 @@ public record RegistrationRequest(
         @NotBlank(message = "Enter your email.") @Email(message = "Enter a valid email.")
         @Size(max = 254, message = "Email must be at most 254 characters.") String email,
         @NotBlank(message = "Enter a password.")
-        @Size(min = 8, max = 72, message = "Password must be between 8 and 72 characters.") String password) {
+        @Size(max = 72, message = "Password must be at most 72 characters.") String password) {
     public RegistrationRequest {
         name = name == null ? null : name.trim();
         email = email == null ? null : AppUser.normalizeEmail(email);

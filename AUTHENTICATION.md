@@ -5,7 +5,7 @@ The existing website and Vite `/api` proxy are preserved. Spring Boot 4.1.1 mana
 ## New files
 
 - `Restaurant/src/main/java/com/rayen/Restaurant/auth/AppUser.java`, `Role.java`, and `UserRepository.java`: the `users` table and account storage. Fields are `id`, `name`, `email`, `password_hash`, `role`, and `created_at`. Emails are trimmed and lowercased; a database unique constraint prevents duplicates.
-- `RegistrationRequest.java`, `RegistrationService.java`, and `AuthErrors.java`: backend validation, BCrypt hashing, CLIENT-only registration, and readable error responses. Passwords must have at least eight characters and at most 72 UTF-8 bytes, the BCrypt limit. A supplied `role` field cannot change the assigned CLIENT role.
+- `RegistrationRequest.java`, `RegistrationService.java`, and `AuthErrors.java`: backend validation, BCrypt hashing, CLIENT-only registration, and readable error responses. Passwords must be nonblank and at most 72 UTF-8 bytes, the BCrypt limit. A supplied `role` field cannot change the assigned CLIENT role.
 - `UserDetailsResponse.java` and `AuthController.java`: safe account responses, registration, current-user lookup, and CSRF tokens. No password or hash appears in account responses.
 - `SecurityConfig.java`: Spring Security handles login, session ID rotation, logout, CSRF, and role checks. Public GET `/api/dishes` remains accessible. All `/api/admin/**` routes require ADMIN on the backend.
 - `OwnerSetup.java`: optional first-owner setup; no public admin-registration API.

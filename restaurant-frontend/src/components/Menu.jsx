@@ -1,41 +1,8 @@
-import { useEffect, useState } from 'react'
 import { categories, filterDishes } from './menuCategories'
+import { dishAnchor, euroPrice } from './dishDisplay'
 import './Menu.css'
 
-const euroPrice = new Intl.NumberFormat('de-DE', { style: 'currency', currency: 'EUR' })
-
-export default function Menu() {
-  const [selected, setSelected] = useState('all')
-  const [attempt, setAttempt] = useState(0)
-  const [menu, setMenu] = useState({ dishes: [], loading: true, error: '' })
-
-  useEffect(() => {
-    const controller = new AbortController()
-
-    async function loadDishes() {
-      try {
-        // Use the Vite proxy and cancel requests when this effect is cleaned up.
-        const response = await fetch('/api/dishes', { signal: controller.signal })
-        if (!response.ok) throw new Error('Unable to load menu')
-        const dishes = await response.json()
-        if (!Array.isArray(dishes)) throw new Error('Unexpected menu response')
-        if (!controller.signal.aborted) {
-          setMenu({ dishes, loading: false, error: '' })
-        }
-      } catch {
-        if (!controller.signal.aborted) {
-          setMenu({
-            dishes: [], loading: false,
-            error: 'We couldn’t load the menu.',
-          })
-        }
-      }
-    }
-
-    loadDishes()
-    return () => controller.abort()
-  }, [attempt])
-
+export default function Menu({ menu, retry, selected, setSelected }) {
   const visibleDishes = filterDishes(menu.dishes, selected)
   const selectedName = categories.find((category) => category.id === selected)?.name
   const message = menu.loading
@@ -71,15 +38,12 @@ export default function Menu() {
         {message}
       </p>
       {menu.error && (
-        <button className="menu-retry" type="button" onClick={() => {
-          setMenu({ dishes: [], loading: true, error: '' })
-          setAttempt((current) => current + 1)
-        }}>Retry</button>
+        <button className="menu-retry" type="button" onClick={retry}>Retry</button>
       )}
       {!menu.loading && !menu.error && visibleDishes.length > 0 && (
         <div className="menu-dish-grid">
           {visibleDishes.map((dish) => (
-            <article className="menu-dish" key={dish.id}>
+            <article className="menu-dish" key={dish.id} id={dishAnchor(dish.id)} tabIndex={-1}>
               <h3>{dish.name}</h3>
               <p className="menu-dish-category">{dish.category || 'Uncategorized'}</p>
               <p>{dish.description || 'No description available.'}</p>

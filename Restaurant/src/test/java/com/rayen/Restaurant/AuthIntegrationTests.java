@@ -75,12 +75,14 @@ class AuthIntegrationTests {
     @Test
     void validatesNameEmailAndPasswordIncludingBcryptByteLimit() throws Exception {
         register("""
-                {"name":" ", "email":"invalid", "password":"short"}
+                {"name":" ", "email":"invalid", "password":" "}
                 """).andExpect(status().isBadRequest()).andExpect(jsonPath("$.errors.name").exists())
                 .andExpect(jsonPath("$.errors.email").exists()).andExpect(jsonPath("$.errors.password").exists());
         register("{\"name\":\"Test\",\"email\":\"test@example.com\",\"password\":\"" + "é".repeat(40) + "\"}")
                 .andExpect(status().isBadRequest()).andExpect(jsonPath("$.errors.password").exists());
         assertEquals(0, users.count());
+        register("{\"name\":\"Test\",\"email\":\"short@example.com\",\"password\":\"a\"}")
+                .andExpect(status().isCreated());
     }
 
     private MvcResult csrfToken(MockHttpSession session) throws Exception {

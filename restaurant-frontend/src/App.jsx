@@ -5,9 +5,26 @@ import { useEffect, useState } from 'react'
 import useAuth from './auth/useAuth'
 import AuthControls from './auth/AuthControls'
 import AdminDashboard from './auth/AdminDashboard'
+import Bestsellers from './components/Bestsellers'
+import useDishes from './components/useDishes'
+import { dishAnchor } from './components/dishDisplay'
 
 function App() {
   const auth = useAuth()
+  const { menu, retry } = useDishes()
+  const [selected, setSelected] = useState('all')
+  const [dishTarget, setDishTarget] = useState(null)
+  useEffect(() => {
+    if (!dishTarget) return
+    // Wait for React to reveal the dish before scrolling and moving keyboard focus.
+    const card = document.getElementById(dishAnchor(dishTarget.id))
+    card?.scrollIntoView({ behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'center' })
+    card?.focus({ preventScroll: true })
+  }, [dishTarget])
+  function viewDish(dish) {
+    setSelected('all')
+    setDishTarget({ id: dish.id })
+  }
   const [adminPage, setAdminPage] = useState(() => window.location.hash === '#admin')
   useEffect(() => {
     const updatePage = () => setAdminPage(window.location.hash === '#admin')
@@ -36,8 +53,9 @@ function App() {
         <div className="page-content">
         <section id="menu" aria-labelledby="menu-heading">
           <h2 id="menu-heading">Our Menu</h2>
-          <Menu />
+          <Menu menu={menu} retry={retry} selected={selected} setSelected={setSelected} />
         </section>
+        <Bestsellers menu={menu} retry={retry} onViewDish={viewDish} />
         <section id="booking" aria-labelledby="booking-heading">
           <h2 id="booking-heading">Make a Booking</h2>
           <p>Table reservations will be available soon.</p>
