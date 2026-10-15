@@ -150,3 +150,5 @@
     gap: 12px;
   }
 }
+.dish-photo { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
+.dish-photo-fallback { display: grid; place-items: center; background: #e6e9df; color: #56705e; }

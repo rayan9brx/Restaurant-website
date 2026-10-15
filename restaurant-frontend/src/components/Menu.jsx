@@ -1,6 +1,8 @@
 import { categories, filterDishes } from './menuCategories'
-import { dishAnchor, euroPrice } from './dishDisplay'
+import { dishAnchor } from './dishDisplay'
+import DishPrice from './DishPrice'
 import './Menu.css'
+import DishPhoto from './DishPhoto'
 
 export default function Menu({ menu, retry, selected, setSelected }) {
   const visibleDishes = filterDishes(menu.dishes, selected)
@@ -44,11 +46,15 @@ export default function Menu({ menu, retry, selected, setSelected }) {
         <div className="menu-dish-grid">
           {visibleDishes.map((dish) => (
             <article className="menu-dish" key={dish.id} id={dishAnchor(dish.id)} tabIndex={-1}>
+              <DishPhoto dish={dish} />
               <h3>{dish.name}</h3>
               <p className="menu-dish-category">{dish.category || 'Uncategorized'}</p>
               <p>{dish.description || 'No description available.'}</p>
+              {(dish.vegan || dish.vegetarian) && <p>{dish.vegan ? 'Vegan' : 'Vegetarian'}</p>}
+              {dish.ingredients && <p>Ingredients: {dish.ingredients}</p>}
+              {dish.allergens && <p>Allergens: {dish.allergens}</p>}
               <div className="menu-dish-footer">
-                <p className="menu-dish-price">{dish.price != null ? euroPrice.format(dish.price) : 'Price unavailable'}</p>
+                <p className="menu-dish-price"><DishPrice dish={dish} /></p>
                 <span className={`menu-availability${dish.available === false ? ' is-sold-out' : ''}`}>
                   {dish.available === false ? 'Sold out' : 'Available'}
                 </span>

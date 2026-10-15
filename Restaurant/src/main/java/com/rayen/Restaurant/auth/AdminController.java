@@ -8,6 +8,6 @@ import java.util.Map;
 public class AdminController {
     @GetMapping("/dashboard")
     public Map<String, String> dashboard() {
-        return Map.of("message", "Welcome to the Admin Dashboard. Management features are coming later.");
+        return Map.of("message", "Welcome to the Admin Dashboard. Add dishes through Menu Management below.");
     }
 }
