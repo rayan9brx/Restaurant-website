@@ -38,8 +38,8 @@
   padding: 28px;
   overflow-wrap: anywhere;
 }
-.bestseller-copy h3 { margin: 0; color: #183c30; font-size: 1.5rem; }
-.page-content .bestseller-description { font-size: 1rem; color: #526353; }
+.bestseller-copy h3 { margin: 0; color: var(--color-green); font-size: 1.5rem; }
+.page-content .bestseller-description { font-size: 1rem; color: var(--color-muted); }
 .bestseller-details {
   width: 100%;
   margin-top: auto;
@@ -49,16 +49,16 @@
   justify-content: space-between;
   gap: 12px;
 }
-.bestseller-price { font-size: 1.375rem; font-weight: 700; color: #183c30; }
+.bestseller-price { font-size: 1.375rem; font-weight: 700; color: var(--color-green); }
 .bestseller-button {
   display: inline-flex;
   align-items: center;
   gap: 20px;
   padding: 12px 20px;
-  border: 1px solid #b49a58;
+  border: 1px solid var(--color-gold);
   border-radius: 7px;
-  background: #183c30;
-  color: #f8f5ec;
+  background: var(--color-green);
+  color: var(--color-cream);
   font: inherit;
   font-weight: 600;
   cursor: pointer;
@@ -66,7 +66,7 @@
 .bestseller-button span { color: #e6ce8c; }
 .bestseller-button:hover { background: #26523f; }
 .bestseller-button:focus-visible,
-.menu-dish:focus { outline: 3px solid #b49a58; outline-offset: 4px; }
+.menu-dish:focus { outline: 3px solid var(--color-gold); outline-offset: 4px; }
 @media (max-width: 640px) {
   .bestsellers-grid { grid-template-columns: 1fr; gap: 24px; }
   .bestseller-copy { padding: 24px; }

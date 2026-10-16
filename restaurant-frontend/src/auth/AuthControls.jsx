@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from 'react'
 import { api, post } from './api'
 import './Auth.css'
+import { Link, useNavigate } from 'react-router-dom'
 
 function PasswordField({ name, label, autoComplete, invalid, error }) {
   const [visible, setVisible] = useState(false)
@@ -24,6 +25,7 @@ function PasswordField({ name, label, autoComplete, invalid, error }) {
 }
 
 export default function AuthControls({ auth }) {
+  const navigate = useNavigate()
   const { user, setUser, checking, error: restoreError, restore } = auth
   const [mode, setMode] = useState(null)
   const [busy, setBusy] = useState(false)
@@ -86,7 +88,7 @@ export default function AuthControls({ auth }) {
     try {
       await post('/api/auth/logout', {})
       setUser(null)
-      if (window.location.hash === '#admin') window.location.hash = '#home'
+      if (window.location.hash === '#admin') navigate('/#home')
       setMessage('You have been logged out.')
     } catch (failure) {
       setError(failure.message)
@@ -104,7 +106,7 @@ export default function AuthControls({ auth }) {
         {checking ? <span role="status">Checking login…</span> : user ? (
           <>
             <span className="auth-user">Hello, {user.name}</span>
-            {user.role === 'ADMIN' && <a href="#admin">Admin Dashboard</a>}
+            {user.role === 'ADMIN' && <Link to="/#admin">Admin Dashboard</Link>}
             <button type="button" className="login-button" disabled={busy} onClick={logout}>{busy ? 'Logging out…' : 'Log Out'}</button>
           </>
         ) : <button type="button" className="login-button" onClick={() => open('login')}>Log In</button>}

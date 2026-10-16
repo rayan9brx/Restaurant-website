@@ -138,13 +138,13 @@ export default function MenuManagement({ onCreated }) {
   return (
     <div className="menu-management">
       <div className="management-heading">
-        <h3>Menu Management</h3>
+        <h2>Menu Management</h2>
         <button className="auth-submit" type="button" disabled={busy} onClick={() => showForm()}>Add Dish</button>
       </div>
       {message && <p className="auth-success" role="status">{message}</p>}
       {deleteError && <p className="auth-error" role="alert">{deleteError}</p>}
       {open && <form key={formVersion} className="dish-form" ref={form} onSubmit={save} aria-labelledby="dish-form-heading">
-        <h4 id="dish-form-heading">{editing ? `Edit Dish: ${editing.name}` : 'Add Dish'}</h4>
+        <h3 id="dish-form-heading">{editing ? `Edit Dish: ${editing.name}` : 'Add Dish'}</h3>
         <p>All fields are required unless marked optional.{editing ? ' Leave the replacement photo empty to keep the current photo.' : ''}</p>
         {failure && <p className="auth-error" role="alert">{failure}</p>}
         <fieldset disabled={busy}>
@@ -197,10 +197,10 @@ export default function MenuManagement({ onCreated }) {
         const items = category.id === 'other' ? otherDishes : visibleDishes.filter((dish) => normalizeCategory(dish.category) === category.id)
         if (!items.length && (search || selected !== 'all')) return null
         return <section className="management-category" key={category.id} aria-labelledby={`management-${category.id}`}>
-          <h4 id={`management-${category.id}`}>{category.name}</h4>
+          <h3 id={`management-${category.id}`}>{category.name}</h3>
           {items.length === 0 ? <p>No dishes in this category yet.</p> : <div className="menu-dish-grid">{items.map((dish) => <article className="menu-dish" key={dish.id}>
             <DishPhoto dish={dish} />
-            <h5>{dish.name}</h5><p>{dish.description}</p>
+            <h4>{dish.name}</h4><p>{dish.description}</p>
             <p className="menu-dish-category">{dish.category || 'Uncategorized'}</p>
             <p><DishPrice dish={dish} /> · {dish.available ? 'Available' : 'Sold out'}</p>
             {dish.bestseller && <p>Bestseller</p>}

@@ -23,7 +23,7 @@ The existing website and Vite `/api` proxy are preserved. Spring Boot 4.1.1 mana
 6. POST `/api/auth/logout` requires a fresh CSRF token, invalidates the session and deletes its cookie.
 7. The owner sees an Admin Dashboard link to `#admin`. That view requests GET `/api/admin/dashboard`, which rejects unauthenticated visitors and CLIENT accounts even if they manually enter the URL.
 
-Use the existing Vite development server with `npm run dev`; its proxy connects to the backend on port 8080. `vite preview` does not use the development proxy. For an eventual HTTPS deployment, enable `server.servlet.session.cookie.secure=true` and serve frontend and backend under the same origin. Nothing has been deployed.
+Use the existing Vite development server with `npm run dev`; its proxy connects to the backend on port 8080. `vite preview` also has an `/api` proxy to the same backend. For an eventual HTTPS deployment, enable `server.servlet.session.cookie.secure=true` and serve frontend and backend under the same origin. Nothing has been deployed.
 
 ## Create the restaurant owner
 

@@ -1,0 +1,74 @@
+/* Shared controls are limited to the restaurant's existing component classes. */
+:is(.login-button, .auth-submit, .menu-retry, .bestseller-button, .promo-order, .about-story-button, .dish-delete-button) {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: var(--control-height);
+  max-width: 100%;
+  padding: 10px 20px;
+  border-radius: var(--radius-control);
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.5;
+  text-align: center;
+  text-decoration: none;
+  overflow-wrap: anywhere;
+}
+:is(.auth-submit, .menu-retry):hover:not(:disabled) { background: #26523f; }
+:is(.login-button, .auth-submit, .menu-retry, .bestseller-button, .dish-delete-button, .back-to-menu):focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 4px;
+}
+:is(.auth-dialog, .dish-form, .management-filters) :is(input:not([type=checkbox]), select, textarea) {
+  display: block;
+  width: 100%;
+  min-width: 0;
+  min-height: var(--control-height);
+  padding: 10px 12px;
+  border: 1px solid #809185;
+  border-radius: var(--radius-control);
+  background: var(--color-surface);
+  color: var(--color-green);
+  font-size: 1rem;
+  line-height: 1.5;
+}
+:is(.auth-dialog, .dish-form, .management-filters) :is(input, select, textarea):focus-visible {
+  outline: 3px solid var(--color-gold);
+  outline-offset: 3px;
+}
+:is(.auth-dialog, .dish-form) [aria-invalid=true] { border-color: var(--color-error); }
+.auth-dialog .auth-password-input input { padding-right: 48px; }
+.dish-form input[type=file] { white-space: normal; overflow: hidden; }
+.dish-form input[type=file]::file-selector-button { font: inherit; margin-right: 8px; max-width: 100%; }
+
+.page-content > section > h1,
+.page-content .admin-page > h1 { font-size: var(--title-size); }
+.page-content > section > h1,
+.page-content > section > h2 { line-height: 1.2; letter-spacing: -.02em; overflow-wrap: anywhere; }
+.menu-dish, .bestseller-card {
+  border-color: var(--color-border);
+  border-radius: var(--radius-card);
+  background: var(--color-surface);
+  box-shadow: var(--card-shadow);
+}
+.menu-dish { padding: var(--space-4); gap: var(--space-2); }
+.page-content .menu-dish h2, .bestseller-copy h3 { font-size: var(--card-title-size); line-height: 1.3; margin: 0; }
+.menu-dish-grid, .bestsellers-grid { gap: var(--space-4); }
+.bestseller-copy { padding: var(--space-4); gap: var(--space-3); }
+.bestsellers-grid { margin-top: var(--space-4); }
+.menu-dish .dish-photo-frame { margin-bottom: 4px; }
+.menu-dish-footer { padding-top: var(--space-2); }
+.page-content .menu-dish-category { font-size: .875rem; }
+.back-to-menu { width: fit-content; line-height: 1.5; }
+.page-content .admin-page { gap: var(--space-3); }
+.page-content .admin-page > h1 { margin-bottom: 0; }
+.admin-page > :is(a, button) { align-self: flex-start; }
+.admin-page > a { color: var(--color-green); }
+.admin-page .menu-management { margin-top: var(--space-3); }
+#dish-form-heading { scroll-margin-top: var(--space-4); }
+#category-heading:focus-visible { outline: 2px solid var(--color-gold); outline-offset: 6px; border-radius: 4px; }
+
+@media (max-width: 480px) {
+  .menu-dish { padding: var(--space-3); }
+  .menu-dish-grid, .bestsellers-grid { gap: var(--space-3); }
+}

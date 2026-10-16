@@ -2,8 +2,8 @@
   position: relative;
   height: clamp(390px, 42vw, 560px);
   overflow: hidden;
-  background: #183c30;
-  color: #f8f5ec;
+  background: var(--color-green);
+  color: var(--color-cream);
   scroll-margin-top: 0;
 }
 
@@ -28,7 +28,7 @@
   position: absolute;
   z-index: 1;
   top: 50%;
-  left: max(64px, calc((100% - 1052px) / 2));
+  left: max(64px, calc((100% - var(--content-width)) / 2 + var(--page-gutter)));
   width: min(490px, calc(100% - 128px));
   transform: translateY(-55%);
 }
@@ -41,8 +41,8 @@
   margin-top: 24px;
   padding: 12px 24px;
   border-radius: 6px;
-  background: #f8f5ec;
-  color: #183c30;
+  background: var(--color-cream);
+  color: var(--color-green);
   font-weight: 700;
   text-decoration: none;
 }
@@ -65,17 +65,21 @@
 .promo-controls { position: absolute; z-index: 2; bottom: 18px; left: 0; right: 0; display: flex; justify-content: center; align-items: center; gap: 20px; }
 .promo-indicators { display: flex; }
 .promo-indicators button { width: 36px; height: 36px; border: 0; background: transparent; display: grid; place-items: center; }
-.promo-indicators span { width: 10px; height: 10px; border: 1px solid #f8f5ec; border-radius: 50%; }
-.promo-indicators [aria-current] span { background: #f8f5ec; }
+.promo-indicators span { width: 10px; height: 10px; border: 1px solid var(--color-cream); border-radius: 50%; }
+.promo-indicators [aria-current] span { background: var(--color-cream); }
 .promo-play { min-width: 100px; padding: 8px 12px; border: 1px solid #f8f5ec80; border-radius: 6px; background: #183c30e6; }
 .promo-play:disabled { cursor: default; }
-.promo-carousel :focus-visible { outline: 3px solid #f8f5ec; outline-offset: 4px; }
+.promo-carousel :focus-visible { outline: 3px solid var(--color-cream); outline-offset: 4px; }
 @media (max-width: 600px) {
-  .promo-carousel { height: 440px; }
+  .promo-carousel { height: 500px; }
   .promo-copy { left: 60px; width: calc(100% - 120px); }
   .promo-copy .promo-eyebrow { font-size: .7rem; }
   .promo-copy p { font-size: 1rem; }
   .promo-slide::after { background: rgba(8, 24, 18, .7); }
+}
+@media (max-width: 360px) {
+  .promo-carousel { height: 560px; }
+  .promo-copy h1 { font-size: 1.75rem; }
 }
 @media (prefers-reduced-motion: reduce) {
   .promo-slide { transition: none; }
