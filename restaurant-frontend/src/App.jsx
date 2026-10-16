@@ -10,6 +10,8 @@ import Bestsellers from './components/Bestsellers'
 import useDishes from './components/useDishes'
 import CategoryPage from './components/CategoryPage'
 import AboutUs from './components/AboutUs'
+import useCart from './cart/useCart'
+import Cart from './cart/Cart'
 
 function PagePosition({ loading }) {
   const { pathname, hash, key } = useLocation()
@@ -30,6 +32,7 @@ function PagePosition({ loading }) {
 function App() {
   const auth = useAuth()
   const { menu, retry } = useDishes()
+  const cart = useCart(menu)
   const location = useLocation()
   // Keep existing owner-dashboard bookmarks working on the home page.
   const adminPage = location.pathname === '/' && location.hash === '#admin'
@@ -44,6 +47,7 @@ function App() {
             <Link to="/#menu">Menu</Link>
             <Link to="/#booking">Make a Booking</Link>
             <Link to="/#about">About Us</Link>
+            <Cart cart={cart} menu={menu} retry={retry} />
             <AuthControls auth={auth} />
           </div>
         </nav>
@@ -59,7 +63,7 @@ function App() {
                   <h2 id="menu-heading">Our Menu</h2>
                   <Menu />
                 </section>
-                <Bestsellers menu={menu} retry={retry} />
+                <Bestsellers menu={menu} retry={retry} cart={cart} />
                 <section id="booking" aria-labelledby="booking-heading">
                   <h2 id="booking-heading">Make a Booking</h2>
                   <p>Table reservations will be available soon.</p>
@@ -68,13 +72,14 @@ function App() {
               </div>
             </div>
           </>} />
-          <Route path="/menu/:categoryId" element={<CategoryPage menu={menu} retry={retry} />} />
+          <Route path="/menu/:categoryId" element={<CategoryPage menu={menu} retry={retry} cart={cart} />} />
           <Route path="*" element={<div className="page-content"><section>
             <h1 id="category-heading" tabIndex={-1}>Page not found</h1>
             <Link to="/#menu">Back to Menu</Link>
           </section></div>} />
         </Routes>
       </main>
+      <div className="cart-feedback" role="status" aria-live="polite" aria-atomic="true">{cart.notice.text && <span key={cart.notice.version}>{cart.notice.text}</span>}</div>
     </>
   )
 }

@@ -5,8 +5,9 @@ import DishPrice from './DishPrice'
 import DishPhoto from './DishPhoto'
 import { isBestseller } from './bestsellerSelection'
 import './Bestsellers.css'
+import AddToCart from '../cart/AddToCart'
 
-export default function Bestsellers({ menu, retry }) {
+export default function Bestsellers({ menu, retry, cart }) {
   const selections = menu.dishes.filter(isBestseller)
   return (
     <section id="bestsellers" aria-labelledby="bestsellers-heading">
@@ -32,7 +33,10 @@ export default function Bestsellers({ menu, retry }) {
                       {dish.available === false ? 'Sold out' : 'Available'}
                     </span>
                   </div>
-                  <Link className="bestseller-button" aria-label={`View ${dish.name} in Menu`} to={`/menu/${normalizeCategory(dish.category)}#${dishAnchor(dish.id)}`}>View in Menu <span aria-hidden="true">↗</span></Link>
+                  <div className="bestseller-actions">
+                    <AddToCart dish={dish} onAdd={cart?.add} quantity={cart?.items.find((item) => item.id === dish.id)?.quantity} />
+                    <Link className="bestseller-button" aria-label={`View ${dish.name} in Menu`} to={`/menu/${normalizeCategory(dish.category)}#${dishAnchor(dish.id)}`}>View in Menu <span aria-hidden="true">↗</span></Link>
+                  </div>
                 </div>
               </article>
             )

@@ -3,8 +3,9 @@ import { categories, filterDishes } from './menuCategories'
 import { dishAnchor } from './dishDisplay'
 import DishPhoto from './DishPhoto'
 import DishPrice from './DishPrice'
+import AddToCart from '../cart/AddToCart'
 
-export default function CategoryPage({ menu, retry }) {
+export default function CategoryPage({ menu, retry, cart }) {
   const { categoryId } = useParams()
   const category = categories.find((item) => item.id !== 'all' && item.id === categoryId)
   const dishes = category ? filterDishes(menu.dishes, category.id) : []
@@ -34,6 +35,7 @@ export default function CategoryPage({ menu, retry }) {
                     {dish.available === false ? 'Sold out' : 'Available'}
                   </span>
                 </div>
+                <AddToCart dish={dish} onAdd={cart?.add} quantity={cart?.items.find((item) => item.id === dish.id)?.quantity} />
               </article>
             ))}
           </div>}

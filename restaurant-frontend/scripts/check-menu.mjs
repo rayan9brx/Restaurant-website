@@ -10,6 +10,8 @@ try {
   const { default: Menu } = await server.ssrLoadModule('/src/components/Menu.jsx')
   const { default: DishPhoto } = await server.ssrLoadModule('/src/components/DishPhoto.jsx')
   const { default: Bestsellers } = await server.ssrLoadModule('/src/components/Bestsellers.jsx')
+  const { default: AddToCart } = await server.ssrLoadModule('/src/cart/AddToCart.jsx')
+  const { default: Cart } = await server.ssrLoadModule('/src/cart/Cart.jsx')
   const dish = { id: 7, name: 'Test salad', category: 'Salads', price: 10.5, description: 'Fresh leaves', ingredients: 'Lettuce', allergens: 'Sesame', vegan: true, available: false, bestseller: true }
   function renderCategory(categoryId, overrides = {}) {
     return renderToStaticMarkup(h(MemoryRouter, { initialEntries: [`/menu/${categoryId}`] },
@@ -31,6 +33,13 @@ try {
   assert.ok(!uploaded.includes('Category image'))
   const bestseller = renderToStaticMarkup(h(MemoryRouter, null, h(Bestsellers, { menu: { dishes: [dish] }, retry() {} })))
   assert.ok(bestseller.includes('href="/menu/salads#menu-dish-7"'))
+  assert.match(renderToStaticMarkup(h(AddToCart, { dish })), /disabled=""/)
+  assert.ok(!renderToStaticMarkup(h(AddToCart, { dish: { ...dish, available: true } })).includes('disabled=""'))
+  const cart = { count: 2, items: [{ id: 7, name: dish.name, quantity: 2 }] }
+  const cartHtml = renderToStaticMarkup(h(Cart, { cart, menu: { dishes: [{ ...dish, available: true, salePrice: 8.25 }] } }))
+  assert.ok(cartHtml.includes('16,50'))
+  const removedDish = renderToStaticMarkup(h(Cart, { cart, menu: { dishes: [] } }))
+  assert.ok(removedDish.includes('Currently unavailable'))
   console.log('Menu checks passed: category links/filtering, loading/error/empty/unknown states, details, photo priority, and dish links.')
 } finally {
   await server.close()
