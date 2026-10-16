@@ -8,6 +8,7 @@
     "build": "vite build",
     "lint": "eslint .",
     "test:menu": "node scripts/check-menu.mjs",
+    "test:cart": "node --test scripts/check-cart.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
