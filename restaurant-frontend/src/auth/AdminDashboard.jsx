@@ -20,8 +20,8 @@ export default function AdminDashboard({ user, checking, onDishCreated }) {
 
   return (
     <div className="page-content">
-      <section aria-labelledby="admin-heading">
-        <h2 id="admin-heading">Admin Dashboard</h2>
+      <section className="admin-page" aria-labelledby="admin-heading">
+        <h1 id="admin-heading">Admin Dashboard</h1>
         <p role="status">{checking ? 'Checking login…' : user?.role !== 'ADMIN'
           ? 'This page is available to the restaurant owner. Please log in with your owner account.'
           : result.error || result.message || 'Loading dashboard…'}</p>

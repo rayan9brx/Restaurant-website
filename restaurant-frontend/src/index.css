@@ -3,23 +3,36 @@
   color: #292d28;
   background: #f8f5ec;
   color-scheme: light;
+  font-synthesis: none;
+  line-height: 1.6;
+  --color-cream: #f8f5ec;
+  --color-green: #183c30;
+  --color-gold: #b49a58;
+  --color-border: #deddd1;
+  --color-muted: #526353;
+  --color-surface: #fffdf7;
+  --color-error: #933c2e;
+  --space-1: 8px;
+  --space-2: 12px;
+  --space-3: 16px;
+  --space-4: 24px;
+  --space-5: 32px;
+  --section-space: clamp(40px, 6vw, 64px);
+  --page-gutter: clamp(16px, 3vw, 24px);
+  --content-width: 1100px;
+  --radius-control: 8px;
+  --radius-card: 16px;
+  --card-shadow: 0 8px 24px rgb(24 60 48 / 7%);
+  --control-height: 46px;
+  --title-size: clamp(2rem, 4vw, 2.75rem);
+  --section-title-size: clamp(1.75rem, 3.5vw, 2.5rem);
+  --card-title-size: 1.375rem;
 }
 
-* {
-  box-sizing: border-box;
-}
-/* Scroll smoothly when clicking navigation links */
-html {
-  scroll-behavior: smooth;
-}
-/**************************************************/
-body {
-  margin: 0;
-}
-/* Jump directly to the section without a scrolling animation */
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+body { margin: 0; min-width: 0; }
+button, input, select, textarea { font: inherit; }
 @media (prefers-reduced-motion: reduce) {
-  html {
-    scroll-behavior: auto;
-  }
+  html { scroll-behavior: auto; }
 }
-/**************************************************/

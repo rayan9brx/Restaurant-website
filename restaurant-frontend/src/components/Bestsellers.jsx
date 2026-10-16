@@ -1,13 +1,12 @@
-import burger from '../assets/bestsellers/beef-burger.png'
-import pizza from '../assets/bestsellers/margherita-pizza.png'
+import { Link } from 'react-router-dom'
+import { normalizeCategory } from './menuCategories'
+import { dishAnchor } from './dishDisplay'
 import DishPrice from './DishPrice'
 import DishPhoto from './DishPhoto'
 import { isBestseller } from './bestsellerSelection'
 import './Bestsellers.css'
 
-const originalPhotos = { 'beef burger': burger, 'margherita pizza': pizza }
-
-export default function Bestsellers({ menu, retry, onViewDish }) {
+export default function Bestsellers({ menu, retry }) {
   const selections = menu.dishes.filter(isBestseller)
   return (
     <section id="bestsellers" aria-labelledby="bestsellers-heading">
@@ -21,10 +20,9 @@ export default function Bestsellers({ menu, retry, onViewDish }) {
       ) : selections.length === 0 ? <p>No favourites selected yet. Explore our menu to find yours.</p> : (
         <div className="bestsellers-grid">
           {selections.map((dish) => {
-            const originalPhoto = originalPhotos[dish.name.trim().toLowerCase()]
             return (
               <article className="bestseller-card" key={dish.id}>
-                {dish.photoUrl || !originalPhoto ? <DishPhoto dish={dish} /> : <img src={originalPhoto} alt={dish.name} width="1536" height="1024" loading="lazy" />}
+                <DishPhoto dish={dish} />
                 <div className="bestseller-copy">
                   <h3>{dish.name}</h3>
                   <p className="bestseller-description">{dish.description || 'No description available.'}</p>
@@ -34,7 +32,7 @@ export default function Bestsellers({ menu, retry, onViewDish }) {
                       {dish.available === false ? 'Sold out' : 'Available'}
                     </span>
                   </div>
-                  <button className="bestseller-button" type="button" aria-label={`View ${dish.name} in Menu`} onClick={() => onViewDish(dish)}>View in Menu <span aria-hidden="true">↗</span></button>
+                  <Link className="bestseller-button" aria-label={`View ${dish.name} in Menu`} to={`/menu/${normalizeCategory(dish.category)}#${dishAnchor(dish.id)}`}>View in Menu <span aria-hidden="true">↗</span></Link>
                 </div>
               </article>
             )

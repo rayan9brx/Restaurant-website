@@ -54,6 +54,18 @@ class MenuManagementTests {
         if (photo != null) builder.file(photo);
         return builder;
     }
+    @Test void uploadedPhotoSurvivesStorageRecreationAndIsPublic() throws Exception {
+        byte[] pixels = image("png", 6, 4);
+        String filename = storage.store(photo(pixels));
+        // A fresh storage service must find uploads without relying on memory or cwd.
+        PhotoStorage restarted = new PhotoStorage(uploads.toAbsolutePath().toString());
+        assertNotNull(restarted.find(filename));
+        assertArrayEquals(pixels, Files.readAllBytes(restarted.find(filename)));
+        mvc.perform(get("/api/dish-photos/" + filename))
+            .andExpect(status().isOk()).andExpect(content().contentType("image/png"))
+            .andExpect(content().bytes(pixels));
+        assertNull(restarted.find("../application.properties"));
+    }
     @Test void createsAndPublishesDishWithoutChangingExistingRows() throws Exception {
         Dish original = new Dish(); original.setName("Existing"); original.setPrice(new java.math.BigDecimal("4.00"));
         original.setCategory("Pizza"); dishes.saveAndFlush(original);
