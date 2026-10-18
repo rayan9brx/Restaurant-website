@@ -32,6 +32,7 @@ export default function AdminDashboard({ user, checking, onDishCreated }) {
         }}>Retry</button>}
         <a href="#home">Back to the restaurant</a>
         {user?.role === 'ADMIN' && <p><Link to="/admin/reservations">Manage reservations</Link></p>}
+        {user?.role === 'ADMIN' && <p><Link to="/admin/reservations/calendar">Reservation Calendar</Link></p>}
         {user?.role === 'ADMIN' && <MenuManagement onCreated={onDishCreated} />}
       </section>
     </div>

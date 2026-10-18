@@ -66,6 +66,7 @@ export default function Reservations({ auth, admin = false }) {
         <h1>{admin ? 'Reservations' : 'My reservations'}</h1>
         <p>All times are Europe/Berlin. Pending requests await the restaurant’s confirmation.</p>
         <Link to="/#booking">Back to booking</Link>
+        {admin && allowed && <Link to="/admin/reservations/calendar">Reservation Calendar</Link>}
         {auth.checking ? <p role="status">Checking login…</p> : !allowed ? (
           <p>Please log in{admin ? ' with an administrator account' : ''} to view reservations.</p>
         ) : <>

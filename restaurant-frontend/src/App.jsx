@@ -14,6 +14,7 @@ import useCart from './cart/useCart'
 import Cart from './cart/Cart'
 import Booking from './booking/Booking'
 import Reservations from './booking/Reservations'
+import ReservationCalendar from './booking/ReservationCalendar'
 
 function PagePosition({ loading }) {
   const { pathname, hash, key } = useLocation()
@@ -74,6 +75,7 @@ function App() {
           <Route path="/menu/:categoryId" element={<CategoryPage menu={menu} retry={retry} cart={cart} />} />
           <Route path="/reservations" element={<Reservations auth={auth} />} />
           <Route path="/admin/reservations" element={<Reservations auth={auth} admin />} />
+          <Route path="/admin/reservations/calendar" element={<ReservationCalendar auth={auth} />} />
           <Route path="*" element={<div className="page-content"><section>
             <h1 id="category-heading" tabIndex={-1}>Page not found</h1>
             <Link to="/#menu">Back to Menu</Link>

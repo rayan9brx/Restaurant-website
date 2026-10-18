@@ -70,3 +70,33 @@ deduplication, field validation, overlapping/adjacent capacity, concurrent reque
 CSRF, authentication, ownership, ADMIN permissions, filtering, confirmation,
 rejection and cancellation. H2 tests do not replace a PostgreSQL deployment check.
 No email or payments are sent.
+
+## Admin reservation calendar
+
+From **Admin Dashboard**, choose **Reservation Calendar**, or visit
+`/admin/reservations/calendar` while logged in as ADMIN. The existing reservation
+list remains available beside the calendar.
+
+- The calendar starts in the current Berlin month. Use Previous/Next, Today,
+  Month/Day and the status filter to explore reservations.
+- Choose a date or **+ more** for the complete day in time order. Mobile displays
+  a monthly agenda instead of the seven-column grid.
+- Choose a reservation to open its details. Pending requests have Confirm and
+  Reject actions; completed status changes refresh both the calendar and details.
+  With the Pending filter active, a confirmed/rejected request disappears from
+  the calendar but its details remain open with its updated status.
+- Tab reaches every control. Date buttons also support arrow keys, Home/End and
+  Page Up/Down. Escape closes details; focus returns to the opener or calendar
+  heading if the opener disappeared after a status change.
+
+The calendar reuses `GET /api/admin/reservations` with inclusive `start` and `end`
+dates plus the optional existing `status` filter. A single-day range is valid;
+missing, reversed or malformed ranges return 400. Use either the existing `date`
+parameter or a range. `GET /api/admin/reservations/{id}` refreshes selected details.
+Both routes require ADMIN; no contact data was added to public availability.
+Existing POST status actions, CSRF tokens and capacity rules are unchanged.
+
+Run `npm run test:calendar` for month boundaries, leap years, DST and Berlin's
+current-date calculations. Backend booking tests also cover range boundaries,
+chronological ordering, detail permissions, filtered status updates and rejected
+status transitions. All backend tests continue to use isolated H2 test databases.

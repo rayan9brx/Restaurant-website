@@ -99,4 +99,100 @@ class BookingTests {
         b.date=day.minusYears(2);bookings.saveAndFlush(b);
         assertThrows(org.springframework.web.server.ResponseStatusException.class,() -> service.change(b.id,"booking@example.com","CANCELLED",false));
     }
+
+    private Booking calendarBooking(LocalDate date, LocalTime time) {
+        return service.create("booking@example.com", new BookingRequest("Calendar Customer",
+                "calendar@example.com", "+49 1234567", date, time, 1, "Window please", UUID.randomUUID()));
+    }
+
+    @Test void calendarRangeIncludesBoundariesAndSortsByDateAndTime() throws Exception {
+        LocalDate first = LocalDate.of(2032, 2, 28);
+        LocalDate last = LocalDate.of(2032, 3, 1);
+        calendarBooking(first.minusDays(1), LocalTime.of(18, 0));
+        var end = calendarBooking(last, LocalTime.of(20, 0));
+        var late = calendarBooking(first, LocalTime.of(19, 0));
+        var early = calendarBooking(first, LocalTime.of(12, 0));
+        var leap = calendarBooking(first.plusDays(1), LocalTime.of(18, 0));
+        calendarBooking(last.plusDays(1), LocalTime.of(18, 0));
+
+        mvc.perform(get("/api/admin/reservations").param("start", first.toString()).param("end", last.toString())
+                .with(user("owner").roles("ADMIN")))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(4))
+            .andExpect(jsonPath("$[0].id").value(early.id)).andExpect(jsonPath("$[1].id").value(late.id))
+            .andExpect(jsonPath("$[2].id").value(leap.id)).andExpect(jsonPath("$[3].id").value(end.id));
+        mvc.perform(get("/api/admin/reservations").param("start", last.toString()).param("end", last.toString())
+                .with(user("owner").roles("ADMIN")))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(1));
+        calendarBooking(LocalDate.of(2032, 12, 30), LocalTime.of(18, 0));
+        calendarBooking(LocalDate.of(2032, 12, 31), LocalTime.of(18, 0));
+        calendarBooking(LocalDate.of(2033, 1, 1), LocalTime.of(12, 0));
+        calendarBooking(LocalDate.of(2033, 1, 2), LocalTime.of(12, 0));
+        mvc.perform(get("/api/admin/reservations").param("start", "2032-12-31").param("end", "2033-01-01")
+                .with(user("owner").roles("ADMIN")))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.length()").value(2))
+            .andExpect(jsonPath("$[0].date").value("2032-12-31"))
+            .andExpect(jsonPath("$[1].date").value("2033-01-01"));
+    }
+
+    @Test void calendarRejectsBadRangesAndProtectsDetails() throws Exception {
+        var booking = calendarBooking(day, LocalTime.of(18, 0));
+        for (String url : List.of("/api/admin/reservations?start=2032-03-01&end=2032-02-28",
+                "/api/admin/reservations?start=2032-03-01", "/api/admin/reservations?end=2032-03-01",
+                "/api/admin/reservations?start=invalid&end=2032-03-01",
+                "/api/admin/reservations?start=2032-03-01&end=2032-03-01&date=2032-03-01")) {
+            mvc.perform(get(url).with(user("owner").roles("ADMIN"))).andExpect(status().isBadRequest());
+        }
+        for (String url : List.of("/api/admin/reservations?start=" + day + "&end=" + day,
+                "/api/admin/reservations/" + booking.id)) {
+            mvc.perform(get(url)).andExpect(status().isUnauthorized());
+            mvc.perform(get(url).with(user("booking@example.com").roles("CLIENT")))
+                .andExpect(status().isForbidden()).andExpect(jsonPath("$.email").doesNotExist());
+        }
+        mvc.perform(get("/api/admin/reservations/{id}", booking.id).with(user("owner").roles("ADMIN")))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.email").value("calendar@example.com"))
+            .andExpect(jsonPath("$.phone").value("+49 1234567"))
+            .andExpect(jsonPath("$.createdAt").exists()).andExpect(jsonPath("$.specialRequests").value("Window please"));
+        mvc.perform(get("/api/admin/reservations/-1").with(user("owner").roles("ADMIN")))
+            .andExpect(status().isNotFound());
+        mvc.perform(get("/api/reservations/availability").param("date", day.toString()).param("guests", "2"))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.email").doesNotExist())
+            .andExpect(jsonPath("$.phone").doesNotExist()).andExpect(jsonPath("$.reservations").doesNotExist());
+    }
+
+    @Test void calendarUpdatesRefreshDetailsAndFiltersWithoutInvalidTransitions() throws Exception {
+        var booking = calendarBooking(day, LocalTime.of(18, 0));
+        String action = "/api/admin/reservations/" + booking.id + "/status";
+        mvc.perform(post(action).with(user("owner").roles("ADMIN")).contentType("application/json")
+                .content("{\"status\":\"CONFIRMED\"}")).andExpect(status().isForbidden());
+        for (String invalid : List.of("PENDING", "CANCELLED", "UNKNOWN")) {
+            mvc.perform(post(action).with(user("owner").roles("ADMIN")).with(csrf()).contentType("application/json")
+                    .content("{\"status\":\"" + invalid + "\"}"))
+                .andExpect(status().isConflict());
+        }
+        mvc.perform(post(action).with(user("owner").roles("ADMIN")).with(csrf()).contentType("application/json")
+                .content("{\"status\":\"CONFIRMED\"}"))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.status").value("CONFIRMED"));
+        mvc.perform(get("/api/admin/reservations/{id}", booking.id).with(user("owner").roles("ADMIN")))
+            .andExpect(jsonPath("$.status").value("CONFIRMED"));
+        mvc.perform(get("/api/admin/reservations").param("start", day.toString()).param("end", day.toString())
+                .param("status", "CONFIRMED").with(user("owner").roles("ADMIN")))
+            .andExpect(jsonPath("$.length()").value(1));
+        mvc.perform(get("/api/admin/reservations").param("start", day.toString()).param("end", day.toString())
+                .param("status", "PENDING").with(user("owner").roles("ADMIN")))
+            .andExpect(jsonPath("$").isEmpty());
+        for (String invalid : List.of("REJECTED", "PENDING", "CANCELLED", "CONFIRMED")) {
+            mvc.perform(post(action).with(user("owner").roles("ADMIN")).with(csrf()).contentType("application/json")
+                    .content("{\"status\":\"" + invalid + "\"}"))
+                .andExpect(status().isConflict());
+        }
+        assertEquals("CONFIRMED", bookings.findById(booking.id).orElseThrow().status);
+        var rejected = calendarBooking(day, LocalTime.of(20, 0));
+        mvc.perform(post("/api/admin/reservations/{id}/status", rejected.id)
+                .with(user("owner").roles("ADMIN")).with(csrf()).contentType("application/json")
+                .content("{\"status\":\"REJECTED\"}"))
+            .andExpect(status().isOk()).andExpect(jsonPath("$.status").value("REJECTED"));
+        mvc.perform(get("/api/admin/reservations").param("start", day.toString()).param("end", day.toString())
+                .param("status", "REJECTED").with(user("owner").roles("ADMIN")))
+            .andExpect(jsonPath("$.length()").value(1)).andExpect(jsonPath("$[0].id").value(rejected.id));
+    }
 }

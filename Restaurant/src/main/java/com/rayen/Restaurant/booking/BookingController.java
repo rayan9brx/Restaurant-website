@@ -7,6 +7,8 @@ import java.security.Principal;
 import java.time.LocalDate;
 import java.util.List;
 import java.util.Map;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.server.ResponseStatusException;
 
 @RestController
 public class BookingController {
@@ -40,12 +42,30 @@ public class BookingController {
 
     @GetMapping("/api/admin/reservations")
     public List<Booking> list(@RequestParam(required = false) LocalDate date,
-                              @RequestParam(required = false) String status) {
-        List<Booking> results = date == null
-                ? bookings.findAllByOrderByDateDescTimeAsc()
-                : bookings.findByDateOrderByTimeAsc(date);
+                              @RequestParam(required = false) String status,
+                              @RequestParam(required = false) LocalDate start,
+                              @RequestParam(required = false) LocalDate end) {
+        List<Booking> results;
+        if (start != null || end != null) {
+            if (start == null || end == null || date != null || end.isBefore(start)) {
+                throw new ResponseStatusException(HttpStatus.BAD_REQUEST,
+                        "Choose both range dates, with the end on or after the start. Use date or a range, not both.");
+            }
+            // Both boundaries are included, matching the visible calendar dates.
+            results = bookings.findByDateBetweenOrderByDateAscTimeAscIdAsc(start, end);
+        } else {
+            results = date == null
+                    ? bookings.findAllByOrderByDateDescTimeAsc()
+                    : bookings.findByDateOrderByTimeAsc(date);
+        }
         if (status == null || status.isBlank()) return results;
         return results.stream().filter(booking -> booking.status.equals(status)).toList();
+    }
+
+    @GetMapping("/api/admin/reservations/{id}")
+    public Booking details(@PathVariable Long id) {
+        return bookings.findById(id).orElseThrow(() ->
+                new ResponseStatusException(HttpStatus.NOT_FOUND, "Reservation not found."));
     }
 
     public record StatusRequest(String status) {}

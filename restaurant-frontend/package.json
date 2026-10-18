@@ -9,6 +9,7 @@
     "lint": "eslint .",
     "test:menu": "node scripts/check-menu.mjs",
     "test:cart": "node --test scripts/check-cart.mjs",
+    "test:calendar": "node --test scripts/check-calendar.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
