@@ -22,13 +22,6 @@
   background: #fffdf6;
   box-shadow: 0 8px 24px rgb(24 60 48 / 7%);
 }
-.bestseller-card > img {
-  display: block;
-  width: 100%;
-  height: auto;
-  aspect-ratio: 3 / 2;
-  object-fit: cover;
-}
 .bestseller-copy {
   flex: 1;
   display: flex;

@@ -1,0 +1,102 @@
+package com.rayen.Restaurant;
+
+import com.rayen.Restaurant.auth.*;
+import com.rayen.Restaurant.booking.*;
+import org.junit.jupiter.api.*;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.test.context.ActiveProfiles;
+import org.springframework.test.web.servlet.*;
+import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.web.context.WebApplicationContext;
+import java.time.*;
+import java.util.*;
+import java.util.concurrent.*;
+import static org.junit.jupiter.api.Assertions.*;
+import static org.springframework.security.test.web.servlet.request.SecurityMockMvcRequestPostProcessors.*;
+import static org.springframework.security.test.web.servlet.setup.SecurityMockMvcConfigurers.springSecurity;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
+import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
+
+@SpringBootTest(properties={"restaurant.booking.capacity=8", "spring.datasource.url=jdbc:h2:mem:restaurant-booking-tests;MODE=PostgreSQL;DB_CLOSE_DELAY=-1"})
+@ActiveProfiles("test")
+class BookingTests {
+    @Autowired WebApplicationContext context;
+    @Autowired BookingRepository bookings;
+    @Autowired UserRepository users;
+    @Autowired BookingService service;
+    MockMvc mvc;
+    final LocalDate day=LocalDate.now(BookingSettings.ZONE).plusDays(7);
+    @BeforeEach void setup(){
+        mvc=MockMvcBuilders.webAppContextSetup(context).apply(springSecurity()).build();
+        bookings.deleteAll();
+        for(String email:List.of("booking@example.com","other@example.com"))
+            if(users.findByEmail(email).isEmpty()) users.saveAndFlush(new AppUser("Booking Customer",email,"unused",Role.CLIENT));
+    }
+    @AfterEach void clean(){bookings.deleteAll();}
+    BookingRequest request(int guests,LocalTime time,UUID key){return new BookingRequest("Customer","contact@example.com","+49 1234567",day,time,guests,"Window please",key);}
+    String json(String date,String time,int guests,String key){return """
+        {"name":"Customer","email":"contact@example.com","phone":"+49 1234567",
+        "date":"%s","time":"%s","guests":%d,"specialRequests":"Window please","requestKey":"%s"}
+        """.formatted(date,time,guests,key);}
+    ResultActions create(String body) throws Exception {return mvc.perform(post("/api/reservations").with(user("booking@example.com")).with(csrf()).contentType("application/json").content(body));}
+    @Test void persistsAndRetriesWithoutDuplicates() throws Exception {
+        String body=json(day.toString(),"18:00",4,UUID.randomUUID().toString());
+        create(body).andExpect(status().isCreated()).andExpect(jsonPath("$.status").value("PENDING"))
+            .andExpect(jsonPath("$.reference").isNotEmpty()).andExpect(jsonPath("$.user").doesNotExist());
+        create(body).andExpect(status().isCreated());
+        assertEquals(1,bookings.count());
+        var saved=bookings.findAll().getFirst();
+        assertEquals("contact@example.com",saved.email); assertEquals("Window please",saved.specialRequests);
+        assertNotNull(saved.createdAt); assertEquals(LocalTime.of(19,30),saved.endTime);
+        mvc.perform(get("/api/reservations/mine").with(user("booking@example.com"))).andExpect(jsonPath("$[0].id").value(saved.id));
+        mvc.perform(get("/api/reservations/mine").with(user("other@example.com"))).andExpect(jsonPath("$").isEmpty());
+    }
+    @Test void validatesDatesHoursGuestsAndContacts() throws Exception {
+        for(String body:List.of(json(day.minusYears(2).toString(),"18:00",2,UUID.randomUUID().toString()),
+            json(day.toString(),"11:00",2,UUID.randomUUID().toString()),json(day.toString(),"21:00",2,UUID.randomUUID().toString()),
+            json(day.toString(),"18:15",2,UUID.randomUUID().toString()),json(day.toString(),"18:00",9,UUID.randomUUID().toString()),
+            json(day.toString(),"18:00",0,UUID.randomUUID().toString()),json(day.toString(),"18:00",2,UUID.randomUUID().toString()).replace("contact@example.com","invalid"),
+            json(day.toString(),"18:00",2,UUID.randomUUID().toString()).replace("Window please","x".repeat(501)))) {
+            int status=create(body).andReturn().getResponse().getStatus(); assertTrue(status==400||status==409);
+        }
+        assertEquals(0,bookings.count());
+        mvc.perform(get("/api/reservations/availability").param("date",day.toString()).param("guests","2")).andExpect(status().isOk());
+    }
+    @Test void enforcesAuthenticationCsrfAndAdmin() throws Exception {
+        var body=json(day.toString(),"18:00",2,UUID.randomUUID().toString());
+        mvc.perform(post("/api/reservations").with(csrf()).contentType("application/json").content(body)).andExpect(status().isUnauthorized());
+        mvc.perform(post("/api/reservations").with(user("booking@example.com")).contentType("application/json").content(body)).andExpect(status().isForbidden());
+        mvc.perform(get("/api/admin/reservations").with(user("booking@example.com"))).andExpect(status().isForbidden());
+        mvc.perform(get("/api/admin/reservations").with(user("owner").roles("ADMIN"))).andExpect(status().isOk());
+    }
+    @Test void statusChangesReleaseCapacityAndEnforceOwnership() throws Exception {
+        var b=service.create("booking@example.com",request(8,LocalTime.of(18,0),UUID.randomUUID()));
+        create(json(day.toString(),"18:30",1,UUID.randomUUID().toString())).andExpect(status().isConflict());
+        mvc.perform(post("/api/reservations/{id}/cancel",b.id).with(user("other@example.com")).with(csrf())).andExpect(status().isForbidden());
+        mvc.perform(post("/api/admin/reservations/{id}/status",b.id).with(user("booking@example.com")).with(csrf()).contentType("application/json").content("{\"status\":\"CONFIRMED\"}")).andExpect(status().isForbidden());
+        mvc.perform(post("/api/admin/reservations/{id}/status",b.id).with(user("owner").roles("ADMIN")).with(csrf()).contentType("application/json").content("{\"status\":\"CONFIRMED\"}")).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("CONFIRMED"));
+        create(json(day.toString(),"18:00",1,UUID.randomUUID().toString())).andExpect(status().isConflict());
+        mvc.perform(post("/api/reservations/{id}/cancel",b.id).with(user("booking@example.com")).with(csrf())).andExpect(status().isOk()).andExpect(jsonPath("$.status").value("CANCELLED"));
+        var second=service.create("booking@example.com",request(8,LocalTime.of(18,0),UUID.randomUUID()));
+        service.change(second.id,"owner","REJECTED",true);
+        assertDoesNotThrow(() -> service.create("booking@example.com",request(8,LocalTime.of(18,0),UUID.randomUUID())));
+        mvc.perform(get("/api/admin/reservations").param("date",day.toString()).param("status","REJECTED").with(user("owner").roles("ADMIN")))
+            .andExpect(jsonPath("$.length()").value(1));
+    }
+    @Test void concurrentRequestsCannotOverbook() throws Exception {
+        ExecutorService pool=Executors.newFixedThreadPool(2);
+        CountDownLatch start=new CountDownLatch(1);
+        Callable<Boolean> task=() -> {start.await();try{service.create("booking@example.com",request(8,LocalTime.of(18,0),UUID.randomUUID()));return true;}catch(org.springframework.web.server.ResponseStatusException e){assertEquals(409,e.getStatusCode().value());return false;}};
+        try {
+            var a=pool.submit(task);var b=pool.submit(task);start.countDown();
+            assertNotEquals(a.get(15,TimeUnit.SECONDS),b.get(15,TimeUnit.SECONDS)); assertEquals(1,bookings.count());
+        } finally {pool.shutdownNow();}
+    }
+    @Test void adjacentBookingsFitAndPastCancellationFails(){
+        var b=service.create("booking@example.com",request(8,LocalTime.of(18,0),UUID.randomUUID()));
+        assertDoesNotThrow(() -> service.create("booking@example.com",request(8,LocalTime.of(19,30),UUID.randomUUID())));
+        b.date=day.minusYears(2);bookings.saveAndFlush(b);
+        assertThrows(org.springframework.web.server.ResponseStatusException.class,() -> service.change(b.id,"booking@example.com","CANCELLED",false));
+    }
+}

@@ -12,6 +12,8 @@ import CategoryPage from './components/CategoryPage'
 import AboutUs from './components/AboutUs'
 import useCart from './cart/useCart'
 import Cart from './cart/Cart'
+import Booking from './booking/Booking'
+import Reservations from './booking/Reservations'
 
 function PagePosition({ loading }) {
   const { pathname, hash, key } = useLocation()
@@ -64,15 +66,14 @@ function App() {
                   <Menu />
                 </section>
                 <Bestsellers menu={menu} retry={retry} cart={cart} />
-                <section id="booking" aria-labelledby="booking-heading">
-                  <h2 id="booking-heading">Make a Booking</h2>
-                  <p>Table reservations will be available soon.</p>
-                </section>
+                <Booking auth={auth} />
                 <AboutUs />
               </div>
             </div>
           </>} />
           <Route path="/menu/:categoryId" element={<CategoryPage menu={menu} retry={retry} cart={cart} />} />
+          <Route path="/reservations" element={<Reservations auth={auth} />} />
+          <Route path="/admin/reservations" element={<Reservations auth={auth} admin />} />
           <Route path="*" element={<div className="page-content"><section>
             <h1 id="category-heading" tabIndex={-1}>Page not found</h1>
             <Link to="/#menu">Back to Menu</Link>

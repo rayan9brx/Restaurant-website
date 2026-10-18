@@ -36,6 +36,12 @@ export default function AuthControls({ auth }) {
   const form = useRef(null)
 
   useEffect(() => {
+    const login = () => { setError(''); setMessage(''); setFields({}); setMode('login') }
+    window.addEventListener('booking-login', login)
+    return () => window.removeEventListener('booking-login', login)
+  }, [])
+
+  useEffect(() => {
     if (mode && !dialog.current.open) dialog.current.showModal()
     if (!mode && dialog.current.open) dialog.current.close()
   }, [mode])
@@ -106,6 +112,8 @@ export default function AuthControls({ auth }) {
         {checking ? <span role="status">Checking login…</span> : user ? (
           <>
             <span className="auth-user">Hello, {user.name}</span>
+            <Link to="/reservations">My reservations</Link>
+            {user.role === 'ADMIN' && <Link to="/admin/reservations">Reservations</Link>}
             {user.role === 'ADMIN' && <Link to="/#admin">Admin Dashboard</Link>}
             <button type="button" className="login-button" disabled={busy} onClick={logout}>{busy ? 'Logging out…' : 'Log Out'}</button>
           </>

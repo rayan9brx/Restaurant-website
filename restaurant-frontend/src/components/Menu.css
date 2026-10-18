@@ -12,19 +12,18 @@
   color: var(--color-green);
   font: inherit;
   cursor: pointer;
+  min-width: 0;
+  padding: 0;
+  border-radius: var(--radius-card);
+  overflow: hidden;
+  text-decoration: none;
+  text-align: center;
 }
 
 .menu-category-grid {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
   gap: 16px;
-}
-
-.menu-category {
-  min-width: 0;
-  padding: 0;
-  border-radius: var(--radius-card);
-  overflow: hidden;
 }
 
 .menu-category img {
@@ -72,18 +71,11 @@
   border-radius: 8px;
 }
 
-.menu-dish h3 {
-  margin: 0 0 12px;
-  color: var(--color-green);
-}
-
 .page-content .menu-dish p + p { margin-top: 0; }
 
 .menu-dish-price {
   font-weight: 600;
 }
-
-.menu-retry { border: 1px solid var(--color-green); background: var(--color-green); color: var(--color-cream); cursor: pointer; }
 
 .page-content .menu-dish-category {
   color: var(--color-muted);
@@ -127,8 +119,6 @@
 .dish-photo { display: block; width: 100%; aspect-ratio: 4 / 3; object-fit: cover; border-radius: 8px; }
 .dish-photo-fallback { display: grid; place-items: center; background: #e6e9df; color: #56705e; }
 
-/* Category links keep the home cards and dish pages visually consistent. */
-.menu-category { text-decoration: none; text-align: center; }
 .back-to-menu { align-self: flex-start; color: var(--color-green); margin-bottom: 24px; }
 .page-content .category-page { justify-content: flex-start; }
 .category-page .menu-dish-grid { margin-top: 24px; }
@@ -136,4 +126,3 @@
 .dish-photo-frame { position: relative; width: 100%; overflow: hidden; border-radius: 8px; flex-shrink: 0; }
 .dish-photo-label { position: absolute; bottom: 10px; left: 10px; padding: 3px 8px; border-radius: 4px; background: var(--color-cream); color: var(--color-green); font-size: .75rem; box-shadow: 0 1px 4px #0002; }
 .bestseller-card > .dish-photo-frame .dish-photo { aspect-ratio: 3 / 2; border-radius: 0; }
-.bestseller-button { text-decoration: none; }

@@ -20,8 +20,7 @@ export default function Bestsellers({ menu, retry, cart }) {
         </div>
       ) : selections.length === 0 ? <p>No favourites selected yet. Explore our menu to find yours.</p> : (
         <div className="bestsellers-grid">
-          {selections.map((dish) => {
-            return (
+          {selections.map((dish) => (
               <article className="bestseller-card" key={dish.id}>
                 <DishPhoto dish={dish} />
                 <div className="bestseller-copy">
@@ -39,8 +38,7 @@ export default function Bestsellers({ menu, retry, cart }) {
                   </div>
                 </div>
               </article>
-            )
-          })}
+          ))}
         </div>
       )}
     </section>

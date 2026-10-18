@@ -1,6 +1,7 @@
 package com.rayen.Restaurant.menu;
 
-import com.rayen.Restaurant.*;
+import com.rayen.Restaurant.Dish;
+import com.rayen.Restaurant.DishRepository;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.support.TransactionTemplate;
 import org.springframework.web.multipart.MultipartFile;
@@ -12,7 +13,9 @@ public class DishCreationService {
     private final PhotoStorage photos;
     private final TransactionTemplate transactions;
     public DishCreationService(DishRepository dishes, PhotoStorage photos, TransactionTemplate transactions) {
-        this.dishes = dishes; this.photos = photos; this.transactions = transactions;
+        this.dishes = dishes;
+        this.photos = photos;
+        this.transactions = transactions;
     }
     public Dish create(DishRequest request, MultipartFile photo) throws IOException {
         String filename = photos.store(photo);
@@ -25,7 +28,7 @@ public class DishCreationService {
                 return dishes.saveAndFlush(dish);
             });
         } catch (RuntimeException failure) {
-            try { photos.remove(filename); } catch (IOException cleanup) { failure.addSuppressed(cleanup); }
+            removeFailedUpload(filename, failure);
             throw failure;
         }
     }
@@ -43,7 +46,7 @@ public class DishCreationService {
             });
         } catch (RuntimeException failure) {
             if (replacement != null) {
-                try { photos.remove(replacement); } catch (IOException cleanup) { failure.addSuppressed(cleanup); }
+                removeFailedUpload(replacement, failure);
             }
             throw failure;
         }
@@ -58,12 +61,25 @@ public class DishCreationService {
         });
     }
 
+    private void removeFailedUpload(String filename, RuntimeException failure) {
+        try {
+            photos.remove(filename);
+        } catch (IOException cleanup) {
+            // Keep the original save error and attach any cleanup error to it.
+            failure.addSuppressed(cleanup);
+        }
+    }
+
     private void apply(Dish dish, DishRequest request) {
-        dish.setName(request.name().trim()); dish.setCategory(request.category());
-        dish.setDescription(request.description().trim()); dish.setPrice(request.price());
-        dish.setSalePrice(request.salePrice()); dish.setBestseller(Boolean.TRUE.equals(request.bestseller()));
+        dish.setName(request.name().trim());
+        dish.setCategory(request.category());
+        dish.setDescription(request.description().trim());
+        dish.setPrice(request.price());
+        dish.setSalePrice(request.salePrice());
+        dish.setBestseller(Boolean.TRUE.equals(request.bestseller()));
         dish.setAvailable(request.available() == null || request.available());
-        dish.setIngredients(request.ingredients()); dish.setAllergens(request.allergens());
+        dish.setIngredients(request.ingredients());
+        dish.setAllergens(request.allergens());
         dish.setVegetarian(Boolean.TRUE.equals(request.vegetarian()) || Boolean.TRUE.equals(request.vegan()));
         dish.setVegan(Boolean.TRUE.equals(request.vegan()));
     }
