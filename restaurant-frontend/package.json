@@ -7,6 +7,8 @@
     "dev": "vite",
     "build": "vite build",
     "lint": "eslint .",
+    "test:admin": "node scripts/check-admin.mjs",
+    "test:header": "node scripts/check-header.mjs",
     "test:menu": "node scripts/check-menu.mjs",
     "test:cart": "node --test scripts/check-cart.mjs",
     "test:calendar": "node --test scripts/check-calendar.mjs",

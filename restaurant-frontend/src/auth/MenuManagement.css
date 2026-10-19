@@ -31,3 +31,82 @@
   .dish-form-grid, .management-filters { grid-template-columns: minmax(0, 1fr); }
   .dish-form { padding: var(--space-3); }
 }
+/* Admin-only overrides leave the customer menu unchanged. */
+.admin-shell .management-summary { display:grid; grid-template-columns:repeat(3,minmax(0,1fr)); gap:16px; margin:0 0 24px; }
+.admin-shell .management-summary > div { padding:18px 22px; border:1px solid var(--color-border); border-radius:12px; background:var(--color-surface); box-shadow:0 3px 12px rgb(24 60 48 / 3%); }
+.admin-shell .management-summary dt { color:var(--color-muted); font-size:.8125rem; }
+.admin-shell .management-summary dd { margin:4px 0 0; color:var(--color-green); font-size:1.8rem; font-weight:650; line-height:1.2; font-variant-numeric:tabular-nums; }
+.admin-shell .management-filters { grid-template-columns:minmax(140px,1fr) minmax(180px,2fr) auto auto; align-items:end; padding:18px; margin:0 0 24px; border:1px solid var(--color-border); border-radius:12px; background:var(--color-surface); }
+.admin-shell .management-filters label { gap:6px; font-size:.8125rem; }
+.admin-shell .management-count { align-self:center; padding-top:22px; color:var(--color-muted); font-size:.8125rem; white-space:nowrap; }
+.admin-shell .management-filters .auth-submit { white-space:nowrap; }
+.admin-shell .management-category { padding:0 0 24px; border:0; }
+.admin-shell .management-category h3 { margin:0 0 12px; font-size:1rem; }
+.admin-shell .management-category > p { padding:16px; border:1px dashed var(--color-border); border-radius:10px; font-size:.875rem; color:var(--color-muted); }
+.admin-shell .management-table { width:100%; table-layout:fixed; border-spacing:0; border:1px solid var(--color-border); border-radius:12px; overflow:hidden; background:var(--color-surface); font-size:.8125rem; box-shadow:0 3px 12px rgb(24 60 48 / 3%); }
+.admin-shell .management-table th, .admin-shell .management-table td { padding:14px 12px; text-align:left; vertical-align:middle; overflow-wrap:anywhere; border-bottom:1px solid var(--color-border); }
+.admin-shell .management-table thead th { color:var(--color-muted); background:#efeee4; font-size:.75rem; font-weight:650; padding-block:12px; }
+.admin-shell .management-table th:first-child { width:35%; }
+.admin-shell .management-table th:nth-child(2) { width:14%; }
+.admin-shell .management-table th:nth-child(3) { width:15%; }
+.admin-shell .management-table th:nth-child(4) { width:14%; }
+.admin-shell .management-table th:nth-child(5) { width:22%; }
+.admin-shell .management-table tr:last-child :is(th,td) { border-bottom:0; }
+.admin-shell .management-table tbody tr:hover { background:#f5f4eb; }
+.admin-shell .management-dish { display:flex; align-items:center; gap:12px; min-width:0; }
+.admin-shell .management-dish > div:last-child { min-width:0; }
+.admin-shell .management-dish-name { display:block; color:var(--color-green); font-weight:650; font-size:.9375rem; line-height:1.4; }
+.admin-shell .management-dish .dish-photo-frame { width:72px; flex:0 0 72px; margin:0; border-radius:8px; }
+.admin-shell .management-dish .dish-photo { display:block; width:72px; height:60px; min-height:0; aspect-ratio:auto; object-fit:cover; border-radius:8px; }
+.admin-shell .management-dish .dish-photo-fallback { display:grid; place-items:center; font-size:.625rem; padding:4px; text-align:center; }
+.admin-shell .management-dish .dish-photo-label { position:static; display:block; padding:2px 0 0; background:transparent; color:var(--color-muted); font-size:.6rem; font-weight:400; line-height:1.2; }
+.admin-shell .management-badges { display:flex; flex-wrap:wrap; gap:4px; margin-top:5px; }
+.admin-shell .management-badges span { padding:1px 6px; border:1px solid #dcd9bf; border-radius:5px; background:#f3eedc; color:#66552b; font-size:.625rem; font-weight:500; }
+.admin-shell .management-available, .admin-shell .management-sold-out { display:inline-block; border:1px solid #c7d7c5; border-radius:20px; padding:3px 8px; background:#eaf1e6; color:#294d2d; font-size:.75rem; white-space:nowrap; }
+.admin-shell .management-sold-out { border-color:#e3c5b8; background:#f8ede6; color:#86492f; }
+.admin-shell .dish-card-actions { margin:0; padding:0; gap:6px; }
+.admin-shell .management-table .dish-card-actions button { padding:7px 10px; font-size:.75rem; min-height:40px; }
+.admin-shell .management-table .menu-retry { background:transparent; color:var(--color-green); border-color:var(--color-border); }
+.admin-shell .management-table .menu-retry:hover { background:#e9eadd; }
+.admin-shell .dish-form { background:var(--color-surface); border-radius:12px; margin:0 0 24px; }
+.admin-shell .dish-form > p { color:var(--color-muted); font-size:.875rem; }
+.admin-shell .dish-form h4 { color:var(--color-green); font-size:.875rem; margin:24px 0 0; padding-top:20px; border-top:1px solid var(--color-border); }
+.admin-shell .dish-form fieldset > h4:first-child { padding-top:0; border:0; }
+.admin-shell .dish-form label { font-size:.875rem; }
+.admin-shell .dish-form-actions { position:sticky; bottom:0; padding:16px 0 0; background:var(--color-surface); border-top:1px solid var(--color-border); }
+.admin-shell .dish-form-actions .menu-retry { background:transparent; color:var(--color-green); }
+.admin-shell .management-notice, .admin-shell .dish-form > .auth-error { position:fixed; z-index:40; right:24px; bottom:24px; max-width:min(400px,calc(100vw - 32px)); padding:14px 18px; border:1px solid var(--color-gold); border-radius:10px; background:var(--color-surface); color:var(--color-green); box-shadow:0 8px 28px rgb(24 60 48 / 15%); margin:0; }
+.admin-shell .dish-form > .auth-error { color:var(--color-error); }
+.admin-shell .management-delete-dialog { width:min(440px,calc(100vw - 32px)); max-height:calc(100svh - 32px); overflow:auto; padding:28px; border:1px solid var(--color-border); border-radius:14px; background:var(--color-surface); color:var(--color-green); box-shadow:0 16px 48px rgb(0 0 0 / 20%); }
+.admin-shell .management-delete-dialog::backdrop { background:rgb(10 30 22 / 55%); }
+.admin-shell .management-delete-dialog h2 { font-size:1.35rem; margin:0 0 12px; overflow-wrap:anywhere; }
+.admin-shell .management-delete-dialog p { margin:0 0 20px; font-size:.9375rem; }
+.admin-shell .management-delete-dialog .dish-card-actions { justify-content:flex-end; }
+.admin-sr-only { position:absolute; width:1px; height:1px; padding:0; margin:-1px; overflow:hidden; clip-path:inset(50%); white-space:nowrap; }
+@media(max-width:800px) {
+ .admin-shell .management-filters { grid-template-columns:1fr 1fr; }
+ .admin-shell .management-count { padding:0; }
+ .admin-shell .management-filters .auth-submit { justify-self:end; }
+ .admin-shell .management-table, .admin-shell .management-table tbody { display:block; border:0; box-shadow:none; background:transparent; }
+ .admin-shell .management-table thead { position:absolute; width:1px; height:1px; overflow:hidden; clip-path:inset(50%); }
+ .admin-shell .management-table tr { display:grid; grid-template-columns:1fr 1fr; margin-bottom:12px; padding:16px; border:1px solid var(--color-border); border-radius:12px; background:var(--color-surface); gap:12px; }
+ .admin-shell .management-table tr :is(th,td) { display:block; width:auto; border:0; padding:0; }
+ .admin-shell .management-table tr th:first-child, .admin-shell .management-table tr td:last-child { grid-column:1 / -1; }
+ .admin-shell .management-table td[data-label]::before { content:attr(data-label); display:block; color:var(--color-muted); font-size:.6875rem; margin-bottom:4px; }
+ .admin-shell .management-table .dish-card-actions button { min-height:44px; padding-inline:16px; }
+}
+@media(max-width:500px) {
+ .admin-shell .management-summary { gap:8px; }
+ .admin-shell .management-summary > div { padding:12px; }
+ .admin-shell .management-summary dt { font-size:.7rem; }
+ .admin-shell .management-summary dd { font-size:1.5rem; }
+ .admin-shell .management-filters { padding:14px; gap:12px; }
+ .admin-shell .management-filters label { grid-column:1 / -1; }
+}
+.admin-shell .dish-form-heading { display:flex; align-items:flex-start; justify-content:space-between; gap:16px; margin-bottom:12px; }
+.admin-shell .dish-form-heading h3 { margin:0; }
+.admin-shell .dish-form-heading .menu-retry { background:transparent; color:var(--color-green); min-height:40px; padding:6px 12px; }
+.admin-shell .dish-form > .auth-error { display:flex; align-items:center; gap:16px; }
+.admin-shell .dish-form > .auth-error button { flex-shrink:0; min-width:40px; min-height:40px; border:0; border-radius:6px; background:transparent; color:inherit; font-size:1.4rem; cursor:pointer; }
+.admin-shell .management-dish .dish-photo-label { box-shadow:none; }
+@media(max-width:500px) { .admin-shell .management-summary dt { min-height:2.5em; } }

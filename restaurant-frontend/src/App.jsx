@@ -4,14 +4,15 @@ import PromoCarousel from './components/PromoCarousel'
 import { useEffect } from 'react'
 import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import useAuth from './auth/useAuth'
-import AuthControls from './auth/AuthControls'
+import Header from './components/Header'
 import AdminDashboard from './auth/AdminDashboard'
+import AdminLayout from './auth/AdminLayout'
 import Bestsellers from './components/Bestsellers'
 import useDishes from './components/useDishes'
 import CategoryPage from './components/CategoryPage'
 import AboutUs from './components/AboutUs'
 import useCart from './cart/useCart'
-import Cart from './cart/Cart'
+
 import Booking from './booking/Booking'
 import Reservations from './booking/Reservations'
 import ReservationCalendar from './booking/ReservationCalendar'
@@ -39,22 +40,12 @@ function App() {
   const location = useLocation()
   // Keep existing owner-dashboard bookmarks working on the home page.
   const adminPage = location.pathname === '/' && location.hash === '#admin'
+  const adminArea = adminPage || location.pathname === '/admin/reservations' || location.pathname === '/admin/reservations/calendar'
   return (
     <>
       <PagePosition loading={menu.loading} />
-      <header className="site-header">
-        <nav className="navigation" aria-label="Main navigation">
-          <Link className="restaurant-name" to="/#home">Rayen Restaurant</Link>
-          <div className="navigation-links">
-            <Link to="/#home">Home</Link>
-            <Link to="/#menu">Menu</Link>
-            <Link to="/#booking">Make a Booking</Link>
-            <Link to="/#about">About Us</Link>
-            <Cart cart={cart} menu={menu} retry={retry} />
-            <AuthControls auth={auth} />
-          </div>
-        </nav>
-      </header>
+      {!adminArea && <Header auth={auth} cart={cart} menu={menu} retry={retry} />}
+      <AdminLayout enabled={adminArea} auth={auth}>
       <main>
         <Routes>
           <Route path="/" element={<>
@@ -82,6 +73,7 @@ function App() {
           </section></div>} />
         </Routes>
       </main>
+      </AdminLayout>
       <div className="cart-feedback" role="status" aria-live="polite" aria-atomic="true">{cart.notice.text && <span key={cart.notice.version}>{cart.notice.text}</span>}</div>
     </>
   )

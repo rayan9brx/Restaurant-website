@@ -7,6 +7,10 @@ export async function api(path, options = {}) {
   }
   const data = await response.json().catch(() => null)
   if (!response.ok) {
+    // A rejected protected request means the cached session is no longer valid.
+    if (response.status === 401 && path !== '/api/auth/login' && path !== '/api/auth/me') {
+      window.dispatchEvent(new Event('session-expired'))
+    }
     const error = new Error(data?.message || 'The server is unavailable. Please try again.')
     error.status = response.status
     error.fields = data?.errors || {}

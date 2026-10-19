@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react'
 import { api } from './api'
 import MenuManagement from './MenuManagement'
-import { Link } from 'react-router-dom'
+
 
 export default function AdminDashboard({ user, checking, onDishCreated }) {
   const [result, setResult] = useState({ message: '', error: '' })
@@ -22,17 +22,14 @@ export default function AdminDashboard({ user, checking, onDishCreated }) {
   return (
     <div className="page-content">
       <section className="admin-page" aria-labelledby="admin-heading">
-        <h1 id="admin-heading">Admin Dashboard</h1>
-        <p role="status">{checking ? 'Checking login…' : user?.role !== 'ADMIN'
+        <h1 id="admin-heading">Menu Management</h1><p className="admin-subtitle">Keep your menu fresh. Manage dishes, prices and availability in one place.</p>
+        <p className="admin-dashboard-status" role="status">{checking ? 'Checking login…' : user?.role !== 'ADMIN'
           ? 'This page is available to the restaurant owner. Please log in with your owner account.'
-          : result.error || result.message || 'Loading dashboard…'}</p>
+          : result.error || (!result.message ? 'Loading dashboard…' : '')}</p>
         {user?.role === 'ADMIN' && result.error && <button className="auth-submit" type="button" onClick={() => {
           setResult({ message: '', error: '' })
           setAttempt((current) => current + 1)
         }}>Retry</button>}
-        <a href="#home">Back to the restaurant</a>
-        {user?.role === 'ADMIN' && <p><Link to="/admin/reservations">Manage reservations</Link></p>}
-        {user?.role === 'ADMIN' && <p><Link to="/admin/reservations/calendar">Reservation Calendar</Link></p>}
         {user?.role === 'ADMIN' && <MenuManagement onCreated={onDishCreated} />}
       </section>
     </div>

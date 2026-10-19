@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
+import { createPortal } from 'react-dom'
 import { api, post } from './api'
 import './Auth.css'
 import { Link, useNavigate } from 'react-router-dom'
@@ -24,7 +25,7 @@ function PasswordField({ name, label, autoComplete, invalid, error }) {
   )
 }
 
-export default function AuthControls({ auth }) {
+export default function AuthControls({ auth, onNavigate }) {
   const navigate = useNavigate()
   const { user, setUser, checking, error: restoreError, restore } = auth
   const [mode, setMode] = useState(null)
@@ -34,6 +35,21 @@ export default function AuthControls({ auth }) {
   const [fields, setFields] = useState({})
   const dialog = useRef(null)
   const form = useRef(null)
+  const account = useRef(null)
+  const accountToggle = useRef(null)
+  const [expanded, setExpanded] = useState(false)
+
+  useEffect(() => {
+    const close = (event) => { if (!account.current?.contains(event.target)) setExpanded(false) }
+    document.addEventListener('pointerdown', close)
+    return () => document.removeEventListener('pointerdown', close)
+  }, [])
+
+  useEffect(() => {
+    if (mode || !(message || error)) return
+    const timer = setTimeout(() => { setMessage(''); setError('') }, 5000)
+    return () => clearTimeout(timer)
+  }, [message, error, mode])
 
   useEffect(() => {
     const login = () => { setError(''); setMessage(''); setFields({}); setMode('login') }
@@ -88,13 +104,14 @@ export default function AuthControls({ auth }) {
   }
 
   async function logout() {
+    setExpanded(false)
     setBusy(true)
     setError('')
     setMessage('')
     try {
       await post('/api/auth/logout', {})
       setUser(null)
-      if (window.location.hash === '#admin') navigate('/#home')
+      navigate('/#home')
       setMessage('You have been logged out.')
     } catch (failure) {
       setError(failure.message)
@@ -105,23 +122,35 @@ export default function AuthControls({ auth }) {
 
   const inputError = (field) => fields[field] && <span className="auth-field-error" id={`${field}-error`}>{fields[field]}</span>
   const invalidProps = (field) => ({ 'aria-invalid': !!fields[field], 'aria-describedby': fields[field] ? `${field}-error` : undefined })
+  // Keep the dialog available when the mobile navigation is collapsed.
+  const overlay = (content) => typeof document === 'undefined' ? content : createPortal(content, document.body)
 
   return (
     <>
       <div className="auth-controls">
         {checking ? <span role="status">Checking login…</span> : user ? (
-          <>
-            <span className="auth-user">Hello, {user.name}</span>
-            <Link to="/reservations">My reservations</Link>
-            {user.role === 'ADMIN' && <Link to="/admin/reservations">Reservations</Link>}
-            {user.role === 'ADMIN' && <Link to="/#admin">Admin Dashboard</Link>}
-            <button type="button" className="login-button" disabled={busy} onClick={logout}>{busy ? 'Logging out…' : 'Log Out'}</button>
-          </>
-        ) : <button type="button" className="login-button" onClick={() => open('login')}>Log In</button>}
-        {restoreError && <span className="auth-nav-feedback" role="status">Could not check login. <button type="button" disabled={checking} onClick={restore}>Retry</button></span>}
-        {!mode && (error || message) && <span className="auth-nav-feedback" role="status">{error || message}</span>}
+          <div className="account" ref={account} onBlur={(event) => {
+            if (!event.currentTarget.contains(event.relatedTarget)) setExpanded(false)
+          }} onKeyDown={(event) => {
+            if (event.key === 'Escape' && expanded) { event.stopPropagation(); setExpanded(false); accountToggle.current.focus() }
+          }}>
+            <button ref={accountToggle} type="button" className="account-toggle" aria-expanded={expanded} aria-controls="account-links" onClick={() => setExpanded(!expanded)}>
+              <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" aria-hidden="true"><circle cx="12" cy="8" r="4" /><path d="M4 22v-2a8 8 0 0 1 16 0v2" /></svg>
+              <span className="auth-user">{user.name}</span><span aria-hidden="true">⌄</span>
+            </button>
+            <div id="account-links" hidden={!expanded} className="account-dropdown" onClick={(event) => {
+              if (event.target.closest('a')) { setExpanded(false); onNavigate?.() }
+            }}>
+              <Link to="/reservations">My Reservations</Link>
+              {user.role === 'ADMIN' && <><Link to="/#admin">Admin Dashboard</Link><Link to="/admin/reservations/calendar">Reservation Calendar</Link></>}
+              <button type="button" disabled={busy} onClick={logout}>{busy ? 'Logging out…' : 'Log Out'}</button>
+            </div>
+          </div>
+        ) : !restoreError && <button type="button" className="login-button" onClick={() => open('login')}>Log In</button>}
+        {restoreError && <div className="auth-connection" role="status"><span>Login unavailable</span><button type="button" disabled={checking} onClick={restore}>Retry</button><span className="auth-connection-detail">{restoreError}</span></div>}
       </div>
-      <dialog className="auth-dialog" ref={dialog} onCancel={(event) => {
+      {!mode && (error || message) && overlay(<div className="auth-notification" role="status">{error || message}</div>)}
+      {overlay(<dialog className="auth-dialog" ref={dialog} onCancel={(event) => {
         if (busy) event.preventDefault()
         else setMode(null)
       }} onClose={() => setMode(null)} aria-labelledby="auth-title">
@@ -145,7 +174,7 @@ export default function AuthControls({ auth }) {
         <p className="auth-switch">{mode === 'signup' ? 'Already have an account?' : 'New here?'}{' '}
           <button type="button" disabled={busy} onClick={() => open(mode === 'signup' ? 'login' : 'signup')}>{mode === 'signup' ? 'Log in' : 'Sign up'}</button>
         </p>
-      </dialog>
+      </dialog>)}
     </>
   )
 }
