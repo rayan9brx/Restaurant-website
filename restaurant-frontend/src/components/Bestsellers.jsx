@@ -11,8 +11,14 @@ export default function Bestsellers({ menu, retry, cart }) {
   const selections = menu.dishes.filter(isBestseller)
   return (
     <section id="bestsellers" aria-labelledby="bestsellers-heading">
-      <p className="bestsellers-label">CUSTOMER FAVOURITES</p>
-      <h2 id="bestsellers-heading">Our Bestsellers</h2>
+      <div className="bestsellers-header">
+        <div>
+          <p className="bestsellers-label">CUSTOMER FAVOURITES</p>
+          <h2 id="bestsellers-heading">Our Bestsellers</h2>
+          <p className="bestsellers-subtitle">Two favourites worth coming back for.</p>
+        </div>
+        <Link className="bestsellers-menu-link" to="/#menu">Explore Full Menu <span aria-hidden="true">→</span></Link>
+      </div>
       {menu.loading ? <p role="status">Loading our favourites…</p> : menu.error ? (
         <div role="status">
           <p>Our favourites couldn’t be loaded. Please try again.</p>
@@ -22,7 +28,10 @@ export default function Bestsellers({ menu, retry, cart }) {
         <div className="bestsellers-grid">
           {selections.map((dish) => (
               <article className="bestseller-card" key={dish.id}>
-                <DishPhoto dish={dish} />
+                <div className="bestseller-image">
+                  <DishPhoto dish={dish} />
+                  <span className="bestseller-badge">Bestseller</span>
+                </div>
                 <div className="bestseller-copy">
                   <h3>{dish.name}</h3>
                   <p className="bestseller-description">{dish.description || 'No description available.'}</p>
@@ -33,8 +42,8 @@ export default function Bestsellers({ menu, retry, cart }) {
                     </span>
                   </div>
                   <div className="bestseller-actions">
-                    <AddToCart dish={dish} onAdd={cart?.add} quantity={cart?.items.find((item) => item.id === dish.id)?.quantity} />
-                    <Link className="bestseller-button" aria-label={`View ${dish.name} in Menu`} to={`/menu/${normalizeCategory(dish.category)}#${dishAnchor(dish.id)}`}>View in Menu <span aria-hidden="true">↗</span></Link>
+                    <AddToCart dish={dish} onAdd={cart?.add} quantity={cart?.items.find((item) => item.id === dish.id)?.quantity} showIcon />
+                    <Link className="bestseller-menu-link" aria-label={`View ${dish.name} in Menu`} to={`/menu/${normalizeCategory(dish.category)}#${dishAnchor(dish.id)}`}>View in Menu <span aria-hidden="true">→</span></Link>
                   </div>
                 </div>
               </article>
