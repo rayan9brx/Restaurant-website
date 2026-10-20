@@ -5,6 +5,7 @@ import { useEffect } from 'react'
 import { Link, Route, Routes, useLocation } from 'react-router-dom'
 import useAuth from './auth/useAuth'
 import Header from './components/Header'
+import Footer from './components/Footer'
 import AdminDashboard from './auth/AdminDashboard'
 import AdminLayout from './auth/AdminLayout'
 import Bestsellers from './components/Bestsellers'
@@ -74,6 +75,7 @@ function App() {
         </Routes>
       </main>
       </AdminLayout>
+      {!adminArea && <Footer />}
       <div className="cart-feedback" role="status" aria-live="polite" aria-atomic="true">{cart.notice.text && <span key={cart.notice.version}>{cart.notice.text}</span>}</div>
     </>
   )
