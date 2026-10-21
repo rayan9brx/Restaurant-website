@@ -33,7 +33,7 @@ public class SecurityConfig {
                 .requestMatchers(HttpMethod.GET, "/api/dish-photos/*").permitAll()
                 .requestMatchers("/api/dish-photos/**").hasRole("ADMIN")
                 .requestMatchers(HttpMethod.GET, "/api/dishes", "/api/auth/csrf", "/api/reservations/availability").permitAll()
-                .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login").permitAll()
+                .requestMatchers(HttpMethod.POST, "/api/auth/register", "/api/auth/login", "/api/menu-assistant/chat").permitAll()
                 .requestMatchers("/api/**").authenticated()
                 .anyRequest().permitAll())
             .requestCache(cache -> cache.disable())

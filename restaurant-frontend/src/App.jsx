@@ -17,6 +17,7 @@ import useCart from './cart/useCart'
 import Booking from './booking/Booking'
 import Reservations from './booking/Reservations'
 import ReservationCalendar from './booking/ReservationCalendar'
+import MenuAssistant from './assistant/MenuAssistant'
 
 function PagePosition({ loading }) {
   const { pathname, hash, key } = useLocation()
@@ -76,6 +77,7 @@ function App() {
       </main>
       </AdminLayout>
       {!adminArea && <Footer />}
+      {!adminArea && <MenuAssistant />}
       <div className="cart-feedback" role="status" aria-live="polite" aria-atomic="true">{cart.notice.text && <span key={cart.notice.version}>{cart.notice.text}</span>}</div>
     </>
   )

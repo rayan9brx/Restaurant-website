@@ -12,6 +12,7 @@
     "test:menu": "node scripts/check-menu.mjs",
     "test:cart": "node --test scripts/check-cart.mjs",
     "test:calendar": "node --test scripts/check-calendar.mjs",
+    "test:assistant": "node --test scripts/check-assistant.mjs",
     "preview": "vite preview"
   },
   "dependencies": {
