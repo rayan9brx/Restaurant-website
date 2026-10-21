@@ -1,4 +1,25 @@
 /* Shared controls are limited to the restaurant's existing component classes. */
+/* Homepage rules stay separate from category and admin typography. */
+.homepage-content :is(#menu-heading, #bestsellers-heading, #booking-heading, #about-heading) {
+  font-family: inherit;
+  font-weight: 700;
+  font-size: var(--section-title-size);
+  line-height: 1.18;
+  letter-spacing: -.025em;
+}
+.homepage-content :is(.bestsellers-label, .booking-eyebrow, .about-story-label) {
+  font-size: .75rem;
+  font-weight: 700;
+  letter-spacing: .16em;
+  line-height: 1.5;
+  margin-bottom: 12px;
+}
+.homepage-content :is(.bestsellers-subtitle, .booking-copy > p:not(.booking-eyebrow), .about-story-copy > p:not(.about-story-label)) {
+  font-size: 1rem;
+  line-height: 1.7;
+}
+.homepage-content > section { scroll-margin-top: var(--header-offset); }
+.homepage-content :is(.promo-order, .about-story-button, .auth-submit, .add-to-cart) { font-weight: 600; }
 .auth-submit, .menu-retry {
   border: 1px solid var(--color-green);
   background: var(--color-green);

@@ -4,7 +4,7 @@
   overflow: hidden;
   background: var(--color-green);
   color: var(--color-cream);
-  scroll-margin-top: 0;
+  scroll-margin-top: var(--header-offset);
 }
 
 .promo-slide {
@@ -47,6 +47,10 @@
   text-decoration: none;
 }
 .promo-order:hover { background: #e9e3d5; }
+.promo-actions { display: flex; flex-wrap: wrap; gap: 12px; margin-top: 24px; }
+.promo-actions .promo-order { margin: 0; }
+.promo-book { display: inline-flex; align-items: center; justify-content: center; min-height: var(--control-height); padding: 10px 20px; border: 1px solid #e0c78b; border-radius: var(--radius-control); color: var(--color-cream); background: #183c3066; font-weight: 600; text-decoration: none; }
+.promo-book:hover { background: var(--color-green); }
 .promo-carousel button { color: inherit; font: inherit; cursor: pointer; }
 .promo-arrow {
   position: absolute;

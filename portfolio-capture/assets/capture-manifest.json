@@ -1,0 +1,177 @@
+[
+  {
+    "file": "gallery-1440x900/01-homepage.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/02-menu-categories.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/03-burgers-category.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/04-bestsellers.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/05-booking.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/06-about-us.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/07-admin-menu-dashboard.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/07b-admin-filtered.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/07c-admin-full-inventory.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/08-add-dish.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/09-edit-dish.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/10-reservation-calendar.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/10b-calendar-day-view.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/11-reservation-details.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/13-cart.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "gallery-1440x900/14-footer.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "restaurant-website-admin-cover.png",
+    "width": 1600,
+    "height": 1000
+  },
+  {
+    "file": "screenshots/01-homepage.png",
+    "width": 1425,
+    "height": 637
+  },
+  {
+    "file": "screenshots/02-menu-categories.png",
+    "width": 1425,
+    "height": 407
+  },
+  {
+    "file": "screenshots/03-burgers-category.png",
+    "width": 1425,
+    "height": 1377
+  },
+  {
+    "file": "screenshots/04-bestsellers.png",
+    "width": 1425,
+    "height": 810
+  },
+  {
+    "file": "screenshots/05-booking.png",
+    "width": 1425,
+    "height": 1006
+  },
+  {
+    "file": "screenshots/06-about-us.png",
+    "width": 1425,
+    "height": 787
+  },
+  {
+    "file": "screenshots/07-admin-menu-dashboard.png",
+    "width": 1425,
+    "height": 830
+  },
+  {
+    "file": "screenshots/07b-admin-filtered.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "screenshots/07c-admin-full-inventory.png",
+    "width": 1425,
+    "height": 1509
+  },
+  {
+    "file": "screenshots/08-add-dish.png",
+    "width": 1153,
+    "height": 1185
+  },
+  {
+    "file": "screenshots/09-edit-dish.png",
+    "width": 1153,
+    "height": 1414
+  },
+  {
+    "file": "screenshots/10-reservation-calendar.png",
+    "width": 1425,
+    "height": 1537
+  },
+  {
+    "file": "screenshots/10b-calendar-day-view.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "screenshots/11-reservation-details.png",
+    "width": 1440,
+    "height": 900
+  },
+  {
+    "file": "screenshots/12-mobile-homepage.png",
+    "width": 375,
+    "height": 554
+  },
+  {
+    "file": "screenshots/12b-mobile-bestsellers.png",
+    "width": 375,
+    "height": 1100
+  },
+  {
+    "file": "screenshots/13-cart.png",
+    "width": 1425,
+    "height": 891
+  },
+  {
+    "file": "screenshots/14-footer.png",
+    "width": 1425,
+    "height": 390
+  }
+]

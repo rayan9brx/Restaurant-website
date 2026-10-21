@@ -152,11 +152,7 @@ export default function Booking({ auth }) {
           <h3>Make a Booking</h3>
           <fieldset disabled={busy}>
             <div className="booking-grid">
-              {input('name', 'Full name', 'text', { maxLength: 100, autoComplete: 'name' })}
-              {input('email', 'Email', 'email', { maxLength: 254, autoComplete: 'email' })}
-              {input('phone', 'Phone number', 'tel', { maxLength: 30, minLength: 6, pattern: '[+0-9() .\\-]{6,30}', autoComplete: 'tel' })}
               {input('date', 'Date', 'date', { min: berlinToday() })}
-              {input('guests', 'Number of guests', 'number', { min: 1, max: availability.maxPartySize, step: 1 })}
               <label>
                 Available time slot
                 <select name="time" required value={values.time} onChange={change}
@@ -166,6 +162,12 @@ export default function Booking({ auth }) {
                 </select>
                 {fields.time && <span className="booking-error">{fields.time}</span>}
               </label>
+              {input('guests', 'Guests', 'number', { min: 1, max: availability.maxPartySize, step: 1 })}
+            </div>
+            <div className="booking-grid booking-contact">
+              {input('name', 'Full name', 'text', { maxLength: 100, autoComplete: 'name' })}
+              {input('email', 'Email', 'email', { maxLength: 254, autoComplete: 'email' })}
+              {input('phone', 'Phone number', 'tel', { maxLength: 30, minLength: 6, pattern: '[+0-9() .\\-]{6,30}', autoComplete: 'tel' })}
             </div>
             <label>
               Special requests (optional)
@@ -176,11 +178,13 @@ export default function Booking({ auth }) {
             </label>
             <p role="status">{availabilityMessage}</p>
             {availability.error && <button type="button" onClick={() => setAttempt(current => current + 1)}>Retry availability</button>}
-            {!auth.user && <p>{resume ? 'Log in to resume your request. Your details are kept while this page stays open.' : 'You can explore the form. Log in to send your request.'}</p>}
+            <div className="booking-submit-area">
+            {!auth.user && <p className="booking-login-note">{resume ? 'Log in to resume your request. Your details are kept while this page stays open.' : 'Log in to send your request. Your form details will be kept.'}</p>}
             {error && <p className="booking-error" role="alert">{error}</p>}
             <button className="auth-submit" disabled={auth.checking || busy || availability.loading || !availability.slots.includes(values.time)}>
               {busy ? 'Saving request…' : 'Request a Table'}
             </button>
+            </div>
           </fieldset>
         </form>}
       </div>

@@ -15,9 +15,13 @@ function SocialIcon({ name }) {
 }
 
 export default function Footer() {
+  const socials = footerSocials.filter(({ url }) => {
+    try { return ['https:', 'http:'].includes(new URL(url).protocol) } catch { return false }
+  })
+  const hasContact = Object.values(footerContact).some(Boolean)
   return <footer className="site-footer">
     <div className="site-footer-inner">
-      <div className="site-footer-columns">
+      <div className={`site-footer-columns${socials.length ? "" : " without-socials"}`}>
         <div className="site-footer-brand">
           <Link className="site-footer-name" to="/#home">Rayen Restaurant</Link>
           <p className="site-footer-tagline">Good food. Great moments.</p>
@@ -26,26 +30,20 @@ export default function Footer() {
         <section aria-labelledby="footer-contact-heading">
           <h2 id="footer-contact-heading">Contact Us</h2>
           <address className="site-footer-contact">
-            <div><span className="site-footer-detail-label">Email</span>
-              {footerContact.email ? <a href={`mailto:${footerContact.email}`}>{footerContact.email}</a> : <span className="site-footer-placeholder">Placeholder — add email</span>}
-            </div>
-            <div><span className="site-footer-detail-label">Phone</span>
-              {footerContact.phone ? <a href={`tel:${footerContact.phone.replace(/[^+\d]/g, '')}`}>{footerContact.phone}</a> : <span className="site-footer-placeholder">Placeholder — add phone number</span>}
-            </div>
-            <div><span className="site-footer-detail-label">Address</span>
-              <span className={!footerContact.address ? 'site-footer-placeholder' : undefined}>{footerContact.address || 'Placeholder — add restaurant address'}</span>
-            </div>
+            {footerContact.email && <div><span className="site-footer-detail-label">Email</span><a href={`mailto:${footerContact.email}`}>{footerContact.email}</a></div>}
+            {footerContact.phone && <div><span className="site-footer-detail-label">Phone</span><a href={`tel:${footerContact.phone.replace(/[^+\d]/g, '')}`}>{footerContact.phone}</a></div>}
+            {footerContact.address && <div><span className="site-footer-detail-label">Address</span><span>{footerContact.address}</span></div>}
+            {!hasContact && <p>Contact details coming soon</p>}
           </address>
         </section>
-        <section aria-labelledby="footer-social-heading">
+        {socials.length > 0 && <section aria-labelledby="footer-social-heading">
           <h2 id="footer-social-heading">Follow Us</h2>
           <ul className="site-footer-socials">
-            {footerSocials.map(({ name, url }) => <li key={name}>
-              {url ? <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`${name} (opens in a new tab)`}><SocialIcon name={name} />{name}</a>
-                : <span className="site-footer-social-placeholder"><SocialIcon name={name} /><span>{name}<small>Profile URL needed</small></span></span>}
+            {socials.map(({ name, url }) => <li key={name}>
+              <a href={url} target="_blank" rel="noopener noreferrer" aria-label={`${name} (opens in a new tab)`}><SocialIcon name={name} />{name}</a>
             </li>)}
           </ul>
-        </section>
+        </section>}
       </div>
       <div className="site-footer-bottom">
         <p>© {new Date().getFullYear()} Rayen Restaurant. All rights reserved.</p>

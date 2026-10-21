@@ -24,3 +24,27 @@
 .booking-panel button:disabled,.reservations-page button:disabled { opacity:.6; cursor:wait; }
 @media(max-width:760px) { .booking-box { grid-template-columns:minmax(0,1fr); } }
 @media(max-width:440px) { .booking-grid { grid-template-columns:minmax(0,1fr); gap:0; } }
+/* A single split card keeps the form compact and the introduction distinct. */
+.homepage-content .booking-box { grid-template-columns:minmax(0,.8fr) minmax(0,1.4fr); align-items:stretch; gap:0; padding:0; overflow:hidden; border-color:var(--color-border); background:var(--color-surface); }
+.homepage-content .booking-copy { padding:clamp(24px,3vw,36px); background:var(--color-green); }
+.homepage-content .booking-copy h2 { margin-block:12px 20px; }
+.homepage-content .booking-ornament { margin-block:20px; font-size:1.5rem; }
+.homepage-content .booking-panel { border-radius:0; padding:clamp(20px,3vw,32px); background:var(--color-surface); }
+.homepage-content .booking-grid { grid-template-columns:repeat(3,minmax(0,1fr)); gap:12px; }
+.homepage-content .booking-contact { border-top:1px solid var(--color-border); padding-top:18px; }
+.homepage-content .booking-panel label { font-size:.875rem; gap:6px; margin-bottom:16px; }
+.homepage-content .booking-panel :is(input,select,textarea) { min-height:var(--control-height); padding:10px; }
+.homepage-content .booking-panel h3 { margin-bottom:20px; }
+.homepage-content .booking-submit-area { display:flex; flex-direction:column; gap:12px; margin-top:18px; }
+.homepage-content .booking-submit-area .auth-submit { margin:0; }
+.homepage-content .booking-login-note { font-size:.875rem; color:var(--color-muted); }
+.homepage-content .booking-panel a { color:var(--color-green); }
+@media(max-width:900px) {
+ .homepage-content .booking-box { grid-template-columns:minmax(0,1fr); }
+ .homepage-content .booking-copy { padding:28px; }
+ .homepage-content .booking-copy h2 { max-width:22ch; }
+ .homepage-content .booking-ornament { margin-block:12px; }
+}
+@media(max-width:600px) {
+ .homepage-content .booking-grid { grid-template-columns:minmax(0,1fr); gap:0; }
+}

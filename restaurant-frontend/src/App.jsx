@@ -53,7 +53,7 @@ function App() {
             {adminPage && <AdminDashboard user={auth.user} checking={auth.checking} onDishCreated={retry} />}
             <div hidden={adminPage}>
               <PromoCarousel />
-              <div className="page-content">
+              <div className="page-content homepage-content">
                 <section id="menu" aria-labelledby="menu-heading">
                   <h2 id="menu-heading">Our Menu</h2>
                   <Menu />

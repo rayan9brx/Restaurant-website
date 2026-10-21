@@ -47,7 +47,10 @@ function PromoCarousel() {
             <p className="promo-eyebrow">Made to enjoy · Rayen Restaurant</p>
             <h1>{slide.title}</h1>
             <p>{slide.description}</p>
-            <a className="promo-order" href="#menu">Order Now</a>
+            <div className="promo-actions">
+              <a className="promo-order" href="#menu">Explore Menu</a>
+              <a className="promo-book" href="#booking">Book a Table</a>
+            </div>
           </div>
         </div>
       ))}

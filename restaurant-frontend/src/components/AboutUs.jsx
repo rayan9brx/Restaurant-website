@@ -1,5 +1,5 @@
 import { Link } from 'react-router-dom'
-import pizza from '../assets/bestsellers/margherita-pizza.png'
+import interior from '../assets/about/illustrative-interior.png'
 import './AboutUs.css'
 
 export default function AboutUs() {
@@ -13,10 +13,10 @@ export default function AboutUs() {
           <p>Whether you’re stopping by for a quick bite or sharing a relaxed meal with friends and family, we want you to feel welcome. Explore our menu and find your next favourite.</p>
           <Link className="about-story-button" to="/#menu">Explore Our Menu <span aria-hidden="true">↗</span></Link>
         </div>
-        {/* This existing food image and the botanical details are decorative. */}
+        {/* Generated interior imagery is illustrative, not a photo of the restaurant. */}
         <div className="about-story-art" aria-hidden="true">
           <span className="about-story-ring" />
-          <img src={pizza} alt="" width="1536" height="1024" loading="lazy" />
+          <img src={interior} alt="" width="1122" height="1402" loading="lazy" />
           <svg className="about-story-sprig" viewBox="0 0 160 220" fill="none" focusable="false">
             <g stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
               <path d="M40 204C64 158 80 100 112 20" />

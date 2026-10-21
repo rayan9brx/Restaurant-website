@@ -20,6 +20,7 @@
   --section-space: clamp(40px, 6vw, 64px);
   --page-gutter: clamp(16px, 3vw, 24px);
   --content-width: 1100px;
+  --header-offset: 100px;
   --radius-control: 8px;
   --radius-card: 16px;
   --card-shadow: 0 8px 24px rgb(24 60 48 / 7%);

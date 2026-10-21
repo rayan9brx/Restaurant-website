@@ -1,0 +1,135 @@
+{
+  "05-booking": {
+    "height": 1005.1015625,
+    "images": [],
+    "left": 186.5,
+    "top": 1883.671875,
+    "viewport": {
+      "height": 900,
+      "width": 1440
+    },
+    "width": 1052
+  },
+  "06-about-us": {
+    "height": 785.6640625,
+    "images": [
+      {
+        "alt": "",
+        "loaded": true
+      }
+    ],
+    "left": 186.5,
+    "top": 2888.7734375,
+    "viewport": {
+      "height": 900,
+      "width": 1440
+    },
+    "width": 1052
+  },
+  "02-menu-categories": {
+    "height": 406.3984375,
+    "images": [
+      {
+        "alt": "",
+        "loaded": true
+      },
+      {
+        "alt": "",
+        "loaded": true
+      },
+      {
+        "alt": "",
+        "loaded": true
+      },
+      {
+        "alt": "",
+        "loaded": true
+      },
+      {
+        "alt": "",
+        "loaded": true
+      }
+    ],
+    "left": 186.5,
+    "top": 644,
+    "viewport": {
+      "height": 900,
+      "width": 1440
+    },
+    "width": 1052
+  },
+  "03-burgers-category": {
+    "height": 1376.46875,
+    "images": [
+      {
+        "alt": "Beef Burger",
+        "loaded": true
+      }
+    ],
+    "left": 186.5,
+    "top": 84,
+    "viewport": {
+      "height": 900,
+      "width": 1440
+    },
+    "width": 1052
+  },
+  "12b-mobile-bestsellers": {
+    "height": 1098.96875,
+    "images": [
+      {
+        "alt": "Margherita Pizza",
+        "loaded": true
+      },
+      {
+        "alt": "Beef Burger",
+        "loaded": true
+      }
+    ],
+    "left": 16,
+    "top": 1400.484375,
+    "viewport": {
+      "height": 844,
+      "width": 390
+    },
+    "width": 343
+  },
+  "09-edit-dish": {
+    "height": 1413.2734375,
+    "images": [
+      {
+        "alt": "Beef Burger",
+        "loaded": true
+      }
+    ],
+    "left": 272,
+    "top": 470.546875,
+    "viewport": {
+      "height": 2200,
+      "width": 1440
+    },
+    "width": 1113
+  },
+  "08-add-dish": {
+    "height": 1183.6796875,
+    "images": [],
+    "left": 272,
+    "top": 470.546875,
+    "viewport": {
+      "height": 2200,
+      "width": 1440
+    },
+    "width": 1113
+  },
+  "14-footer": {
+    "height": 389.578125,
+    "images": [],
+    "left": 0,
+    "top": 3674.4375,
+    "viewport": {
+      "height": 900,
+      "width": 1440
+    },
+    "width": 1425
+  }
+}
